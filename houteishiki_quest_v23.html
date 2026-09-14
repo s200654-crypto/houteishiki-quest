@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>方程式クエスト</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,"Yu Gothic",sans-serif;background:radial-gradient(circle at top,#273b80,#11152f 55%,#090b18);color:#fff;padding:24px}
+.app{width:min(900px,96vw);margin:auto}
+.title-screen{text-align:center;min-height:70vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px}
+.title-screen h1{font-size:clamp(38px,8vw,68px);margin:0;text-shadow:0 5px #000}
+.title-screen p{font-size:20px;color:#cbd5ff;margin:8px 0 30px}
+.title-buttons{width:min(520px,92vw);display:grid;gap:14px}
+.title-btn{border:3px solid #7183ff;background:#29346b;color:#fff;border-radius:18px;padding:17px;font-size:20px;font-weight:900;cursor:pointer;box-shadow:0 5px 0 #11152f}
+.title-btn:hover{background:#3a4b91;transform:translateY(-1px)}.home-btn{position:fixed;top:14px;left:14px;z-index:10;display:none}
+.header{text-align:center}h1{font-size:clamp(32px,7vw,58px);margin:0;text-shadow:0 4px #000}.sub{color:#cbd5ff}.panel{background:#111837ee;border:3px solid #7183ff;border-radius:24px;padding:26px;box-shadow:0 0 35px #6478ff44;margin-top:18px}.stats{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.stat{background:#252f60;border:2px solid #4d5ba5;border-radius:12px;padding:8px 14px;font-weight:800}.coin{color:#ffd45a}.hp{color:#ff7185}.bar{height:11px;background:#11162f;border-radius:20px;overflow:hidden;margin:12px 0 24px}.progress{height:100%;background:#55e6a5;width:0;transition:.3s}.question{font-size:clamp(22px,4vw,32px);font-weight:900;text-align:center;margin:20px 0 24px}.options{display:grid;grid-template-columns:1fr 1fr;gap:14px}.option,.navbtn{border:3px solid #5363b2;background:#29346b;color:#fff;border-radius:16px;padding:16px;font-size:19px;font-weight:800;cursor:pointer}.option:hover,.navbtn:hover{background:#354587}.correct{background:#176c4d!important;border-color:#55e6a5!important}.wrong{background:#7c2942!important;border-color:#ff7185!important}.feedback{display:none;margin-top:16px;padding:14px;border-radius:12px;background:#202849}.next,.restart,.save{display:block;margin:18px auto 0;border:0;border-radius:13px;padding:13px 26px;background:#ffd45a;color:#251b00;font-weight:900;font-size:16px;cursor:pointer}.next:disabled{opacity:.35}.menu{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}.navbtn{font-size:15px;padding:11px 16px}.screen{display:none}.screen.active{display:block}.mistake{border:2px solid #4d5ba5;border-radius:14px;padding:15px;margin:12px 0;background:#202849}.mistake b{color:#ff9baa}.create label{display:block;margin:12px 0 5px;font-weight:800}.create input{width:100%;padding:13px;border-radius:10px;border:2px solid #5363b2;background:#0f1631;color:white;font-size:17px}.created{margin-top:18px;color:#cbd5ff}.tabs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}.setcard{border:2px solid #4d5ba5;border-radius:16px;padding:16px;margin:12px 0;background:#202849}.setcard h3{margin:0 0 6px}.tag{display:inline-block;padding:4px 9px;border-radius:999px;background:#354587;margin-bottom:8px;font-size:13px;font-weight:800}.playset{margin-top:10px;border:0;border-radius:11px;padding:10px 16px;background:#ffd45a;color:#251b00;font-weight:900;cursor:pointer}.delete-set{margin-top:10px;margin-left:8px;border:2px solid #ff7185;border-radius:11px;padding:8px 12px;background:#7c2942;color:#fff;font-weight:900;cursor:pointer}.problem-row{margin:12px 0;padding:12px;border:2px solid #39477f;border-radius:12px;background:#171f42}.remove{float:right;border:0;border-radius:8px;padding:5px 8px;cursor:pointer}.hint{color:#aeb9df;font-size:14px}.empty{text-align:center;color:#aeb9df;padding:20px}#result{text-align:center}.big{font-size:68px;font-weight:1000;color:#ffd45a}@media(max-width:600px){.options{grid-template-columns:1fr}.panel{padding:18px}}
+
+.survival-time{font-size:2rem;font-weight:800;text-align:center;margin:10px 0}
+#survivalQuestion{font-size:1.4rem}
+.survival-countdown{font-size:4rem;font-weight:1000;text-align:center;min-height:70px;margin:8px 0}
+#survivalStart{font-size:22px;min-width:220px}
+.survival-input-area{display:flex;flex-direction:column;align-items:center;gap:10px;margin:14px 0}
+#survivalAnswerInput{width:min(320px,90vw);font-size:28px;text-align:center;padding:12px;border-radius:12px;border:2px solid #7183ff}
+.keypad{display:grid;grid-template-columns:repeat(3,82px);gap:8px;justify-content:center;margin-top:4px}
+.keypad button{font-size:24px;font-weight:800;padding:13px 0;border:2px solid #7183ff;border-radius:12px;background:#29346b;color:#fff;cursor:pointer}
+.keypad button:active{transform:scale(.96);background:#3a4b91}
+.keypad .wide{grid-column:span 2}
+@media(max-width:600px){.keypad{grid-template-columns:repeat(3,74px)}.keypad button{font-size:22px}}
+.timeattack-levels{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px auto;max-width:600px}.timeattack-level{border:3px solid #7183ff;background:#29346b;color:#fff;border-radius:16px;padding:18px 10px;font-size:20px;font-weight:900;cursor:pointer}.timeattack-level:hover{background:#3a4b91}.timeattack-info{text-align:center;color:#cbd5ff}.timeattack-time{font-size:2rem;font-weight:900;text-align:center}.timeattack-count{text-align:center;font-weight:900;font-size:18px} @media(max-width:600px){.timeattack-levels{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<button class="navbtn home-btn" onclick="goHome()">🏠 タイトルへ</button>
+<div class="app">
+<section id="titleScreen" class="title-screen">
+  <h1>⚔ 方程式クエスト ⚔</h1>
+  <p>中1数学をゲーム感覚で攻略！</p>
+  <div class="title-buttons">
+    <button class="title-btn" onclick="openScreen('library');showSets('all')">📚 問題集を選ぶ</button>
+    <button class="title-btn" onclick="openScreen('create');if(problemCount===0)addProblemInput()">✏️ 問題集を作る</button>
+    <button class="title-btn" onclick="openScreen('mistakes');showMistakes()">❌ 間違えた問題</button>
+    <button class="title-btn" onclick="startSurvivalMode()">⏱️ 生き残りモード</button>
+    <button class="title-btn" onclick="startTimeAttackMode()">⚡ タイムアタック</button>
+    <button class="title-btn" onclick="openScreen('howto')">📖 遊び方</button>
+  </div>
+</section>
+
+<section id="survival" class="screen panel">
+  <div class="topbar">
+    <h2>⏱️ 生き残りモード</h2>
+    <div id="survivalTime" class="survival-time">15秒</div>
+  </div>
+  <p>正解すると <b>+5秒</b>、不正解だと <b>-1秒</b>！ 間違えたら正解するまで次へ進めません。</p>
+  <div id="survivalCountdown" class="survival-countdown"></div>
+  <button id="survivalStart" class="save" onclick="startSurvivalGame()">▶ スタート</button>
+  <div id="survivalQuestion" class="question"></div>
+  <div id="survivalInputArea" class="survival-input-area">
+    <input id="survivalAnswerInput" type="text" inputmode="numeric" autocomplete="off" placeholder="xの値を入力">
+    <div class="keypad" aria-label="数字キーパッド">
+      <button type="button" onclick="keypadInput('7')">7</button>
+      <button type="button" onclick="keypadInput('8')">8</button>
+      <button type="button" onclick="keypadInput('9')">9</button>
+      <button type="button" onclick="keypadInput('4')">4</button>
+      <button type="button" onclick="keypadInput('5')">5</button>
+      <button type="button" onclick="keypadInput('6')">6</button>
+      <button type="button" onclick="keypadInput('1')">1</button>
+      <button type="button" onclick="keypadInput('2')">2</button>
+      <button type="button" onclick="keypadInput('3')">3</button>
+      <button type="button" onclick="keypadInput('-')">−</button>
+      <button type="button" onclick="keypadInput('0')">0</button>
+      <button type="button" onclick="keypadBackspace()">⌫</button>
+      <button type="button" class="wide" onclick="keypadClear()">クリア</button>
+      <button type="button" onclick="answerSurvival()">回答</button>
+    </div>
+    <button id="survivalAnswerButton" class="mainbtn" style="display:none" onclick="answerSurvival()">回答する</button>
+  </div>
+  <div id="survivalResult" class="feedback" style="display:none"></div>
+  <div id="survivalCorrectCount" class="survival-count">正解：0問</div>
+</section>
+
+<section id="timeattack" class="screen panel">
+  <div class="topbar"><h2>⚡ タイムアタック</h2><div id="timeAttackTime" class="timeattack-time">0.00秒</div></div>
+  <p class="timeattack-info">10問を何秒でクリアできるか挑戦！ 間違えたら即終了。問題はその場でランダム生成されます。</p>
+  <div id="timeAttackSelect">
+    <h3 style="text-align:center">難易度を選ぼう</h3>
+    <div class="timeattack-levels">
+      <button class="timeattack-level" onclick="startTimeAttack(0)">🟢 簡単</button>
+      <button class="timeattack-level" onclick="startTimeAttack(1)">🟡 普通</button>
+      <button class="timeattack-level" onclick="startTimeAttack(2)">🔴 難しい</button>
+    </div>
+  </div>
+  <div id="timeAttackCountdown" class="survival-countdown"></div>
+  <div id="timeAttackQuestion" class="question"></div>
+  <div id="timeAttackInputArea" class="survival-input-area" style="display:none">
+    <input id="timeAttackAnswerInput" type="text" inputmode="numeric" autocomplete="off" placeholder="xの値を入力">
+    <div class="keypad" aria-label="数字キーパッド">
+      <button type="button" onclick="timeKeypadInput('7')">7</button><button type="button" onclick="timeKeypadInput('8')">8</button><button type="button" onclick="timeKeypadInput('9')">9</button>
+      <button type="button" onclick="timeKeypadInput('4')">4</button><button type="button" onclick="timeKeypadInput('5')">5</button><button type="button" onclick="timeKeypadInput('6')">6</button>
+      <button type="button" onclick="timeKeypadInput('1')">1</button><button type="button" onclick="timeKeypadInput('2')">2</button><button type="button" onclick="timeKeypadInput('3')">3</button>
+      <button type="button" onclick="timeKeypadInput('-')">−</button><button type="button" onclick="timeKeypadInput('0')">0</button><button type="button" onclick="timeKeypadBackspace()">⌫</button>
+      <button type="button" class="wide" onclick="timeKeypadClear()">クリア</button><button type="button" onclick="answerTimeAttack()">回答</button>
+    </div>
+  </div>
+  <div id="timeAttackResult" class="feedback" style="display:none"></div>
+  <div id="timeAttackCount" class="timeattack-count">1問目 / 10問</div>
+</section>
+
+<section id="game" class="screen panel">
+<div id="playing">
+<div class="stats"><div class="stat">問題 <span id="stage">1</span>/<span id="total">10</span></div><div class="stat">正解 <span id="score">0</span>問</div></div>
+<div class="bar"><div class="progress" id="progress"></div></div>
+<div class="question" id="question"></div><div class="options" id="options"></div>
+<div class="feedback" id="feedback"></div><button class="next" id="next" disabled>次へ ▶</button>
+</div>
+<div id="result" style="display:none">
+<h2>🎉 クイズ終了！</h2>
+<div class="big" id="finalScore"></div>
+<p id="rank"></p>
+<div id="resultMistakes"></div>
+<button class="restart" onclick="start()">もう一度挑戦</button>
+</div>
+</section>
+<section id="howto" class="screen panel">
+<h2>📖 遊び方</h2>
+<div class="mistake">
+<h3>🎮 問題集を選ぶ</h3>
+<p>「📚 問題集」から遊びたい問題集を選びます。</p>
+<p>🤖 AIが作った問題、👤 人が作った問題、🌐 すべての問題集から選べます。</p>
+</div>
+<div class="mistake">
+<h3>✏️ 問題集を作る</h3>
+<p>「✏️ 問題を作る」でタイトルと説明を入力し、方程式を1〜5問入力します。</p>
+<p>答え・4択・解説は自動で作られます。</p>
+</div>
+<div class="mistake">
+<h3>📝 クイズに挑戦</h3>
+<p>問題集のすべての問題に答えます。途中で終了するのではなく、最後まで答えて結果を確認します。</p>
+</div>
+<div class="mistake">
+<h3>📊 結果を見る</h3>
+<p>最後に「何問中何問正解」が表示されます。間違えた問題があれば、問題・自分の答え・正解・解説もまとめて表示されます。</p>
+</div>
+<div class="mistake">
+<h3>❌ 間違えた問題</h3>
+<p>「❌ 間違えた問題」から、これまでに間違えた問題をあとから復習できます。</p>
+</div>
+</section>
+
+<section id="library" class="screen panel">
+<h2>📚 問題集一覧</h2>
+<div class="tabs">
+<button class="navbtn" onclick="showSets('all')">🌐 すべて</button>
+<button class="navbtn" onclick="showSets('ai')">🤖 AIが作った問題</button>
+<button class="navbtn" onclick="showSets('human')">👤 人が作った問題</button>
+</div>
+<div id="setList"></div>
+</section>
+
+
+<section id="mistakes" class="screen panel"><h2>❌ 間違えた問題</h2><p>このブラウザに記録されたミスが表示されます。</p><div id="mistakeList"></div><button class="restart" onclick="clearMistakes()">間違い記録を消す</button></section>
+
+<section id="create" class="screen panel create">
+<h2>📚 問題集を作る</h2>
+<p>タイトルをつけて、1〜5問の方程式をまとめて投稿できます。</p>
+<label>問題集タイトル</label>
+<input id="setTitle" placeholder="例：中1方程式 基礎①">
+<label>説明</label>
+<input id="setDesc" placeholder="例：方程式の基本問題です">
+<label>削除用パスワード</label>
+<input id="setPassword" type="password" minlength="4" placeholder="4文字以上">
+<div class="hint">※問題集を削除するときに必要です。忘れないようにしてください。</div>
+
+<div id="problemInputs"></div>
+
+<button class="navbtn" onclick="addProblemInput()">＋ 問題を追加</button>
+<div id="setPreview"></div>
+<button class="save" onclick="saveSet()">📤 問題集を投稿する</button>
+
+<div class="created"><h3>📚 自分が作った問題集</h3><div id="createdList"></div></div>
+</section>
+
+<script>
+
+let problemCount=0;
+function addProblemInput(){
+  if(problemCount>=5){alert("問題は最大5問までです。");return;}
+  problemCount++;
+  let box=document.createElement("div");
+  box.className="problem-row";
+  box.id="problemRow"+problemCount;
+  box.innerHTML=`<button class="remove" onclick="removeProblem(${problemCount})">削除</button>
+    <b>問題${problemCount}</b>
+    <label>方程式</label>
+    <input id="expr${problemCount}" placeholder="例：2x + 5 = 15" oninput="previewSet()">
+    <div id="pPrev${problemCount}" class="hint">入力すると答え・4択・解説を自動生成します。</div>`;
+  $("problemInputs").appendChild(box);
+}
+function removeProblem(n){
+  let row=$("problemRow"+n);
+  if(row) row.remove();
+  previewSet();
+}
+function getSetProblems(){
+  let rows=[...document.querySelectorAll('[id^="problemRow"]')];
+  let out=[];
+  rows.forEach(row=>{
+    let id=row.id.replace("problemRow","");
+    let expr=$("expr"+id)?.value.trim();
+    if(expr){
+      let item=makeEquationQuestion(expr);
+      if(item) out.push(item);
+    }
+  });
+  return out;
+}
+function makeEquationQuestion(expr){
+  let ans=solveEquation(expr);
+  if(ans===null)return null;
+  let candidates=new Set([ans]);
+  [1,-1,2,-2,3,-3,5,-5,10,-10].forEach(d=>{if(candidates.size<4)candidates.add(ans+d)});
+  let arr=[...candidates].slice(0,4).sort(()=>Math.random()-0.5);
+  return {q:`${expr} のとき、xは？`,a:arr.map(String),c:arr.indexOf(ans),e:`式を整理すると x = ${ans} になります。`,expr};
+}
+function previewSet(){
+  let box=$("setPreview"), rows=[...document.querySelectorAll('[id^="problemRow"]')];
+  let html="";
+  rows.forEach(row=>{
+    let id=row.id.replace("problemRow","");
+    let expr=$("expr"+id)?.value.trim();
+    if(!expr)return;
+    let item=makeEquationQuestion(expr);
+    if(!item){
+      $("pPrev"+id).textContent="⚠ 正しい一次方程式を入力してください。例：2x + 5 = 15";
+      return;
+    }
+    $("pPrev"+id).innerHTML=`🤖 自動生成：正解 x = ${item.a[item.c]} ／ 4択・解説も自動作成`;
+    html+=`<div class="mistake"><b>問題${id}</b>：${item.q}<br>正解：${item.a[item.c]}</div>`;
+  });
+  box.innerHTML=html;
+}
+async function hashText(value){
+  const data=new TextEncoder().encode(value);
+  const hash=await crypto.subtle.digest("SHA-256",data);
+  return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+async function saveSet(){
+  let title=$("setTitle").value.trim(),desc=$("setDesc").value.trim(),password=$("setPassword").value,problems=getSetProblems();
+  let rows=[...document.querySelectorAll('[id^="problemRow"]')];
+  if(!title){alert("問題集タイトルを入力してください。");return}
+  if(password.length<4){alert("削除用パスワードは4文字以上にしてください。");return}
+  if(problems.length<1){alert("問題を1〜5問入力してください。");return}
+  if(rows.some(row=>{let id=row.id.replace("problemRow","");let e=$("expr"+id)?.value.trim();return e&&!solveEquation(e)})){
+    alert("入力した方程式の中に正しくないものがあります。");return;
+  }
+  let sets=JSON.parse(localStorage.getItem("questionSets")||"[]");
+  sets.push({id:Date.now(),title,desc,author:"あなた",type:"human",passwordHash:await hashText(password),problems});
+  localStorage.setItem("questionSets",JSON.stringify(sets));
+  alert("問題集を投稿しました！\n削除用パスワードを忘れないでください。");
+  $("setTitle").value="";$("setDesc").value="";$("setPassword").value="";
+  $("problemInputs").innerHTML="";$("setPreview").innerHTML="";problemCount=0;
+  showCreated();showSets("all");
+}
+function getAllSets(){
+  let custom=JSON.parse(localStorage.getItem("questionSets")||"[]");
+  let ai=[
+    {id:"ai1",title:"中1方程式 基礎",desc:"方程式の基本を練習しよう！",author:"AI",type:"ai",problems:base.map(q=>({q:q[0],a:q[1],c:q[2],e:q[3]})).slice(0,5)},
+    {id:"ai2",title:"方程式チャレンジ",desc:"少し難しい方程式に挑戦！",author:"AI",type:"ai",problems:base.map(q=>({q:q[0],a:q[1],c:q[2],e:q[3]})).slice(5,10)}
+  ];
+  return ai.concat(custom);
+}
+async function deleteSet(id){
+  let sets=JSON.parse(localStorage.getItem("questionSets")||"[]");
+  let s=sets.find(x=>String(x.id)===String(id));
+  if(!s||s.type!=="human"){alert("削除できる問題集が見つかりません。");return}
+  let password=prompt("削除用パスワードを入力してください。");
+  if(password===null)return;
+  if(await hashText(password)!==s.passwordHash){
+    alert("パスワードが違います。");
+    return;
+  }
+  if(!confirm("「"+s.title+"」を削除しますか？"))return;
+  sets=sets.filter(x=>String(x.id)!==String(id));
+  localStorage.setItem("questionSets",JSON.stringify(sets));
+  showCreated();showSets("all");
+  alert("問題集を削除しました。");
+}
+function showSets(type){
+  let sets=getAllSets().filter(s=>type==="all"||s.type===type),box=$("setList");
+  if(!sets.length){box.innerHTML='<div class="empty">まだ問題集がありません。</div>';return}
+  box.innerHTML=sets.map(s=>`<div class="setcard">
+    <span class="tag">${s.type==="ai"?"🤖 AI作成":"👤 人が作成"}</span>
+    <h3>${escapeHtml(s.title)}</h3>
+    <p>${escapeHtml(s.desc||"")}</p>
+    <div>${s.problems.length}問　作成者：${escapeHtml(s.author)}</div>
+    <button class="playset" onclick="playSet('${s.id}')">▶ この問題集をプレイ</button>
+    ${s.type==="human"?`<button class="delete-set" onclick="deleteSet('${s.id}')">🗑 削除</button>`:""}
+  </div>`).join("");
+}
+function showCreated(){
+  let sets=JSON.parse(localStorage.getItem("questionSets")||"[]"),box=$("createdList");
+  if(!sets.length){box.innerHTML='<div class="empty">まだありません。</div>';return}
+  box.innerHTML=sets.map(s=>`<div class="setcard"><b>${escapeHtml(s.title)}</b><br>${s.problems.length}問</div>`).join("");
+}
+function playSet(id){
+  let s=getAllSets().find(x=>String(x.id)===String(id));
+  if(!s)return;
+  qs=s.problems.map(x=>[x.q,x.a,x.c,x.e]);i=0;score=0;
+  openScreen("game");$("playing").style.display="block";$("result").style.display="none";show();
+}
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+const base=[
+["x + 7 = 15 のとき、xは？",["6","7","8","9"],2,"15 − 7 = 8"],
+["3x = 21 のとき、xは？",["6","7","8","9"],1,"21 ÷ 3 = 7"],
+["2x + 3 = 11 のとき、xは？",["3","4","5","6"],1,"11 − 3 = 8、8 ÷ 2 = 4"],
+["5x − 4 = 16 のとき、xは？",["3","4","5","6"],1,"16 + 4 = 20、20 ÷ 5 = 4"],
+["4x + 2 = 18 のとき、xは？",["3","4","5","6"],1,"18 − 2 = 16、16 ÷ 4 = 4"],
+["7x − 5 = 30 のとき、xは？",["4","5","6","7"],1,"30 + 5 = 35、35 ÷ 7 = 5"],
+["2(x + 3) = 14 のとき、xは？",["3","4","5","6"],1,"14 ÷ 2 = 7、7 − 3 = 4"],
+["3x + 4 = x + 12 のとき、xは？",["2","3","4","5"],2,"3x − x = 12 − 4 → 2x = 8 → x = 4"],
+["6x + 2 = 20 のとき、xは？",["2","3","4","5"],1,"20 − 2 = 18、18 ÷ 6 = 3"],
+["4x − 9 = 15 のとき、xは？",["4","5","6","7"],2,"15 + 9 = 24、24 ÷ 4 = 6"]
+];
+let qs=[],i=0,score=0,answered=false,currentMistakes=[];
+const $=id=>document.getElementById(id);
+function load(){let custom=JSON.parse(localStorage.getItem("customQuestions")||"[]");qs=base.concat(custom.map(x=>[x.q,x.a,x.c,x.e]));}
+function start(){
+  load();
+  qs.sort(()=>Math.random()-0.5);
+  i=0;score=0;currentMistakes=[];
+  $("playing").style.display="block";
+  $("result").style.display="none";
+  show();
+}
+function show(){
+  answered=false;
+  let q=qs[i];
+  $("stage").textContent=i+1;
+  $("total").textContent=qs.length;
+  $("score").textContent=score;
+  $("progress").style.width=((i)/Math.max(qs.length,1))*100+"%";
+  $("question").textContent=q[0];
+  $("options").innerHTML="";
+  $("feedback").style.display="none";
+  $("next").disabled=true;
+  q[1].forEach((x,n)=>{
+    let b=document.createElement("button");
+    b.className="option";
+    b.textContent=String.fromCharCode(65+n)+". "+x;
+    b.onclick=()=>answer(n);
+    $("options").appendChild(b);
+  });
+}
+function answer(n){
+  if(answered)return;
+  answered=true;
+  let q=qs[i],bs=[...document.querySelectorAll(".option")];
+  bs[q[2]].classList.add("correct");
+  if(n===q[2]){
+    score++;
+    $("feedback").textContent="🎉 正解！";
+  }else{
+    bs[n].classList.add("wrong");
+    $("feedback").textContent="❌ 不正解！ 正解は "+String.fromCharCode(65+q[2])+". "+q[1][q[2]];
+    currentMistakes.push({
+      q:q[0],selected:q[1][n],answer:q[1][q[2]],explain:q[3]
+    });
+    let all=JSON.parse(localStorage.getItem("mistakes")||"[]");
+    all.push({
+      q:q[0],selected:q[1][n],answer:q[1][q[2]],explain:q[3]
+    });
+    localStorage.setItem("mistakes",JSON.stringify(all));
+  }
+  $("score").textContent=score;
+  $("feedback").style.display="block";
+  $("next").disabled=false;
+}
+$("next").onclick=()=>{
+  i++;
+  if(i>=qs.length)finish();
+  else show();
+};
+function finish(){
+  $("playing").style.display="none";
+  $("result").style.display="block";
+  $("finalScore").textContent=score+" / "+qs.length+" 問";
+  let percent=qs.length?Math.round(score/qs.length*100):0;
+  $("rank").textContent=percent===100?"🏆 全問正解！":percent>=80?"✨ よくできました！":percent>=50?"📚 もう少し復習しよう！":"💪 まずは間違えた問題を復習しよう！";
+  $("progress").style.width="100%";
+  let box=$("resultMistakes");
+  if(!currentMistakes.length){
+    box.innerHTML='<div class="mistake"><h3>🎊 間違えた問題はありません！</h3><p>全問正解です。</p></div>';
+  }else{
+    box.innerHTML='<h3>❌ 間違えた問題</h3>'+
+      currentMistakes.map((x,n)=>`<div class="mistake">
+      <b>問題 ${n+1}</b><br>${escapeHtml(x.q)}<br>
+      あなたの答え：<span style="color:#ff9baa">${escapeHtml(x.selected)}</span><br>
+      正解：<span style="color:#55e6a5">${escapeHtml(x.answer)}</span><br>
+      解説：${escapeHtml(x.explain)}
+      </div>`).join("");
+  }
+}
+function goHome(){
+  document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+  $("titleScreen").style.display="flex";
+  $("titleScreen").classList.add("active");
+  document.querySelector(".home-btn").style.display="none";
+}
+function openScreen(id){if(answered)return;answered=true;let q=qs[i%qs.length],bs=[...document.querySelectorAll(".option")];bs[q[2]].classList.add("correct");let mistakes=JSON.parse(localStorage.getItem("mistakes")||"[]");
+if(n===q[2]){score+=100;$("feedback").textContent="🎉 正解！ +100 XP　"+q[3]}else{hp--;bs[n].classList.add("wrong");$("feedback").textContent="💥 ミス！　"+q[3];mistakes.push({q:q[0],selected:q[1][n],answer:q[1][q[2]],explain:q[3]});localStorage.setItem("mistakes",JSON.stringify(mistakes))}
+$("score").textContent=score;$("hp").textContent=hp;$("feedback").style.display="block";$("next").disabled=false}
+$("next").onclick=()=>{i++;if(i>=10||hp<=0)finish();else show()};
+function finish(){$("playing").style.display="none";$("result").style.display="block";$("finalScore").textContent=score+" XP";$("rank").textContent=score===1000?"伝説の方程式マスター！":score>=700?"上級冒険者！":score>=400?"見習い冒険者！":"修行あるのみ！"}
+function goHome(){
+  document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+  $("titleScreen").style.display="flex";
+  $("titleScreen").classList.add("active");
+  document.querySelector(".home-btn").style.display="none";
+}
+function openScreen(id){
+  $("titleScreen").style.display="none";
+  $("titleScreen").classList.remove("active");
+  document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+  $(id).classList.add("active");
+  document.querySelector(".home-btn").style.display="block";if(id==="create"){showCreated();if(problemCount===0)addProblemInput()}}
+function showMistakes(){let a=JSON.parse(localStorage.getItem("mistakes")||"[]"),box=$("mistakeList");if(!a.length){box.innerHTML='<div class="empty">まだ間違えた問題はありません。</div>';return}box.innerHTML=a.map((x,n)=>`<div class="mistake"><b>問題 ${n+1}</b><br>${x.q}<br>あなたの答え：${x.selected}<br>正解：${x.answer}<br>解説：${x.explain}</div>`).join("")}
+function clearMistakes(){localStorage.removeItem("mistakes");showMistakes()}
+function solveEquation(s){
+  s=s.replace(/\s+/g,"").replace(/＝/g,"=");
+  if(!s.includes("=")||s.split("=").length!==2)return null;
+  let [L,R]=s.split("=");
+
+  function parseSide(side){
+    side=side.replace(/-/g,"+-");
+    if(side.startsWith("+"))side=side.slice(1);
+    let terms=side.split("+").filter(Boolean),a=0,b=0;
+    for(let t of terms){
+      if(t.includes("x")){
+        let c=t.replace("x","");
+        if(c==="")c="1";
+        if(c==="-")c="-1";
+        if(!/^-?\d+(?:\.\d+)?$/.test(c))return null;
+        a+=Number(c);
+      }else{
+        if(!/^-?\d+(?:\.\d+)?$/.test(t))return null;
+        b+=Number(t);
+      }
+    }
+    return [a,b];
+  }
+
+  let l=parseSide(L),r=parseSide(R);
+  if(!l||!r||l[0]===r[0])return null;
+  let x=(r[1]-l[1])/(l[0]-r[0]);
+  if(!Number.isFinite(x))return null;
+  return Number.isInteger(x)?x:Math.round(x*100)/100;
+}
+
+function makeQuestion(){
+  let expr=$("cq").value.trim(),ans=solveEquation(expr);
+  if(ans===null)return null;
+
+  let candidates=new Set([ans]);
+  [1,-1,2,-2,3,-3,5,-5,10,-10].forEach(d=>{
+    if(candidates.size<4)candidates.add(ans+d);
+  });
+  let arr=[...candidates].slice(0,4);
+  arr.sort(()=>Math.random()-0.5);
+  let correct=arr.indexOf(ans);
+
+  return {
+    q:`${expr} のとき、xは？`,
+    a:arr.map(String),
+    c:correct,
+    e:`式を整理すると x = ${ans} になります。`,
+    expr
+  };
+}
+
+function previewQuestion(){
+  let box=$("preview"),item=makeQuestion();
+  if(!item){box.style.display="none";return;}
+  box.style.display="block";
+  box.innerHTML=`<div class="preview-title">自動生成プレビュー</div>
+  <p>${item.q}</p>
+  <p>A. ${item.a[0]}　 B. ${item.a[1]}　 C. ${item.a[2]}　 D. ${item.a[3]}</p>
+  <p class="preview-answer">正解：${String.fromCharCode(65+item.c)}. ${item.a[item.c]}</p>
+  <p>解説：${item.e}</p>`;
+}
+
+function saveQuestion(){
+  let item=makeQuestion();
+  if(!item){
+    alert("正しい一次方程式を入力してください。例：2x + 5 = 15");
+    return;
+  }
+  let arr=JSON.parse(localStorage.getItem("customQuestions")||"[]");
+  arr.push(item);
+  localStorage.setItem("customQuestions",JSON.stringify(arr));
+  alert("問題を投稿しました！");
+  $("cq").value="";
+  $("preview").style.display="none";
+  showCreated();
+  load();
+}
+
+let survivalTime = 15;
+let survivalElapsed = 0;
+let survivalCorrectCount = 0;
+let survivalCurrent = null;
+let survivalRunning = false;
+let survivalTimer = null;
+let survivalCountdownTimer = null;
+
+let survivalLastQuestion = "";
+
+// 生き残りモードの問題は、固定リストではなく毎回その場で生成する。
+function makeSurvivalQuestion(){
+  const level = getSurvivalDifficulty();
+  let q, ans, e;
+
+  do{
+    if(level === 0){
+      // x + a = b
+      const x = Math.floor(Math.random()*15) - 3;
+      const a = Math.floor(Math.random()*12) + 2;
+      const b = x + a;
+      q = `x ${a >= 0 ? "+" : "−"} ${Math.abs(a)} = ${b}`;
+      ans = x;
+      e = `${b} ${a >= 0 ? "−" : "+"} ${Math.abs(a)} = ${x}`;
+    }else if(level === 1){
+      // ax + b = c
+      const x = Math.floor(Math.random()*13) - 3;
+      const a = Math.floor(Math.random()*5) + 2;
+      const b = Math.floor(Math.random()*15) - 7;
+      const c = a*x + b;
+      q = `${a}x ${b >= 0 ? "+" : "−"} ${Math.abs(b)} = ${c}`;
+      ans = x;
+      e = `${c} ${b >= 0 ? "−" : "+"} ${Math.abs(b)} = ${a}x → x = ${x}`;
+    }else if(level === 2){
+      // ax + b = dx + e
+      const x = Math.floor(Math.random()*15) - 4;
+      const a = Math.floor(Math.random()*5) + 3;
+      const d = Math.floor(Math.random()*(a-1)) + 1;
+      const b = Math.floor(Math.random()*15) - 7;
+      const e2 = (a-d)*x + b;
+      q = `${a}x ${b >= 0 ? "+" : "−"} ${Math.abs(b)} = ${d}x ${e2 >= 0 ? "+" : "−"} ${Math.abs(e2)}`;
+      ans = x;
+      e = `${a}x − ${d}x = ${e2} − ${b} → ${a-d}x = ${e2-b} → x = ${x}`;
+    }else{
+      // 少し難しめ。ax + b = dx + e で係数・定数を大きくする。
+      const x = Math.floor(Math.random()*21) - 7;
+      const a = Math.floor(Math.random()*8) + 4;
+      const d = Math.floor(Math.random()*(a-2)) + 1;
+      const b = Math.floor(Math.random()*31) - 15;
+      const e2 = (a-d)*x + b;
+      q = `${a}x ${b >= 0 ? "+" : "−"} ${Math.abs(b)} = ${d}x ${e2 >= 0 ? "+" : "−"} ${Math.abs(e2)}`;
+      ans = x;
+      e = `${a}x − ${d}x = ${e2} − ${b} → ${a-d}x = ${e2-b} → x = ${x}`;
+    }
+  }while(q === survivalLastQuestion);
+
+  survivalLastQuestion = q;
+  return {q, ans, e};
+}
+
+function startSurvivalMode(){
+  clearInterval(survivalTimer);
+  clearInterval(survivalCountdownTimer);
+  survivalRunning = false;
+  survivalTime = 15;
+  survivalElapsed = 0;
+  survivalCorrectCount = 0;
+  openScreen('survival');
+  updateSurvivalTime();
+  $("survivalCorrectCount").textContent = "正解：0問";
+  $("survivalCountdown").textContent = "";
+  $("survivalStart").style.display = "block";
+  $("survivalStart").disabled = false;
+  $("survivalQuestion").textContent = "スタートを押して挑戦！";
+  $("survivalInputArea").style.display = "none";
+  $("survivalResult").style.display = "none";
+}
+
+function startSurvivalGame(){
+  if(survivalRunning)return;
+  survivalRunning = false;
+  survivalTime = 15;
+  survivalElapsed = 0;
+  survivalCorrectCount = 0;
+  updateSurvivalTime();
+  $("survivalCorrectCount").textContent = "正解：0問";
+  $("survivalStart").style.display = "none";
+  $("survivalInputArea").style.display = "none";
+  
+  $("survivalResult").style.display = "none";
+
+  let n = 3;
+  $("survivalCountdown").textContent = n;
+  clearInterval(survivalCountdownTimer);
+  survivalCountdownTimer = setInterval(() => {
+    n--;
+    if(n > 0){
+      $("survivalCountdown").textContent = n;
+    }else{
+      clearInterval(survivalCountdownTimer);
+      $("survivalCountdown").textContent = "GO!";
+      survivalRunning = true;
+      $("survivalInputArea").style.display = "flex";
+      nextSurvivalQuestion();
+      clearInterval(survivalTimer);
+      survivalTimer = setInterval(() => {
+        if(!survivalRunning)return;
+        survivalTime--;
+        survivalElapsed++;
+        if(survivalTime <= 0){
+          survivalTime = 0;
+          updateSurvivalTime();
+          endSurvivalMode();
+        }else{
+          updateSurvivalTime();
+        }
+      },1000);
+      setTimeout(() => {
+        if(survivalRunning)$("survivalCountdown").textContent = "";
+      },400);
+    }
+  },700);
+}
+
+function updateSurvivalTime(){
+  const el = $("survivalTime");
+  if(el)el.textContent = Math.max(0,survivalTime) + "秒";
+}
+
+function getSurvivalDifficulty(){
+  // 生き残った時間が長いほど難しくなる。30秒を超えたら徐々に上位レベルへ。
+  if(survivalElapsed < 8)return 0;
+  if(survivalElapsed < 20)return 1;
+  if(survivalElapsed < 35)return 2;
+  return 3;
+}
+
+function nextSurvivalQuestion(){
+  survivalCurrent = makeSurvivalQuestion();
+  $("survivalQuestion").textContent = survivalCurrent.q + " のとき、xは？";
+  $("survivalAnswerInput").value = "";
+  $("survivalAnswerInput").disabled = false;
+  $("survivalAnswerButton").disabled = false;
+  $("survivalAnswerInput").focus();
+  $("survivalResult").style.display = "none";
+}
+
+function keypadInput(ch){
+  const input = $("survivalAnswerInput");
+  if(input.disabled || !survivalRunning)return;
+  if(ch === "-" && input.value.length > 0)return;
+  if(ch === "-" && input.value.includes("-"))return;
+  input.value += ch;
+  input.focus();
+}
+function keypadBackspace(){
+  const input = $("survivalAnswerInput");
+  if(input.disabled || !survivalRunning)return;
+  input.value = input.value.slice(0,-1);
+  input.focus();
+}
+function keypadClear(){
+  const input = $("survivalAnswerInput");
+  if(input.disabled || !survivalRunning)return;
+  input.value = "";
+  input.focus();
+}
+
+function answerSurvival(){
+  if(!survivalRunning || !survivalCurrent)return;
+
+  const input = $("survivalAnswerInput");
+  const button = $("survivalAnswerButton");
+  const value = Number(input.value);
+  if(input.value.trim() === "" || !Number.isFinite(value))return;
+
+  if(value === survivalCurrent.ans){
+    input.disabled = true;
+    button.disabled = true;
+    survivalTime += 5;
+    survivalCorrectCount++;
+    updateSurvivalTime();
+    $("survivalCorrectCount").textContent = "正解："+survivalCorrectCount+"問";
+    $("survivalInputArea").style.display = "none";
+  $("survivalResult").style.display = "block";
+    $("survivalResult").textContent = "⭕ 正解！ +5秒";
+
+    setTimeout(() => {
+      if(survivalRunning)nextSurvivalQuestion();
+    },250);
+  }else{
+    survivalTime -= 1;
+    updateSurvivalTime();
+    $("survivalResult").style.display = "block";
+    $("survivalResult").textContent = "❌ 不正解！ -1秒　正解するまでこの問題を続けよう！";
+    input.select();
+
+    if(survivalTime <= 0){
+      survivalTime = 0;
+      endSurvivalMode();
+    }
+  }
+}
+
+$("survivalAnswerInput").addEventListener("keydown", e => {
+  if(e.key === "Enter")answerSurvival();
+});
+
+function endSurvivalMode(){
+  clearInterval(survivalTimer);
+  clearInterval(survivalCountdownTimer);
+  if(!survivalRunning && survivalTime > 0)return;
+
+  survivalRunning = false;
+  survivalTime = Math.max(0,survivalTime);
+  updateSurvivalTime();
+
+  $("survivalQuestion").textContent = "🏁 タイムアップ！";
+  
+  $("survivalCountdown").textContent = "";
+  $("survivalResult").style.display = "block";
+  $("survivalResult").innerHTML =
+    "<b>正解した問題："+survivalCorrectCount+"問</b><br><br>" +
+    "<button class='mainbtn' onclick='startSurvivalGame()'>もう一度</button>";
+}
+let timeAttackTime=0,timeAttackCorrect=0,timeAttackLevel=0,timeAttackCurrent=null,timeAttackRunning=false,timeAttackTimer=null,timeAttackLastQuestion="",timeAttackStart=0;
+
+function startTimeAttackMode(){
+  clearInterval(timeAttackTimer); timeAttackRunning=false; timeAttackTime=0; timeAttackCorrect=0; timeAttackCurrent=null; timeAttackLastQuestion="";
+  openScreen("timeattack"); updateTimeAttackTime();
+  $("timeAttackSelect").style.display="block"; $("timeAttackCountdown").textContent=""; $("timeAttackQuestion").textContent=""; $("timeAttackInputArea").style.display="none"; $("timeAttackResult").style.display="none"; $("timeAttackCount").textContent="1問目 / 10問";
+}
+function makeTimeAttackQuestion(){
+  let q,ans;
+  do{
+    if(timeAttackLevel===0){
+      const x=Math.floor(Math.random()*16)-3,a=Math.floor(Math.random()*10)+2,b=x+a; q=`x ${a>=0?"+":"−"} ${Math.abs(a)} = ${b}`; ans=x;
+    }else if(timeAttackLevel===1){
+      const x=Math.floor(Math.random()*16)-4,a=Math.floor(Math.random()*5)+2,b=Math.floor(Math.random()*15)-7,c=a*x+b; q=`${a}x ${b>=0?"+":"−"} ${Math.abs(b)} = ${c}`; ans=x;
+    }else{
+      const x=Math.floor(Math.random()*19)-6,a=Math.floor(Math.random()*7)+3,d=Math.floor(Math.random()*(a-1))+1,b=Math.floor(Math.random()*21)-10,e=(a-d)*x+b; q=`${a}x ${b>=0?"+":"−"} ${Math.abs(b)} = ${d}x ${e>=0?"+":"−"} ${Math.abs(e)}`; ans=x;
+    }
+  }while(q===timeAttackLastQuestion);
+  timeAttackLastQuestion=q; return {q,ans};
+}
+function startTimeAttack(level){
+  timeAttackLevel=level; timeAttackTime=0; timeAttackCorrect=0; timeAttackRunning=false; updateTimeAttackTime(); $("timeAttackSelect").style.display="none"; $("timeAttackInputArea").style.display="none"; $("timeAttackResult").style.display="none"; $("timeAttackCount").textContent="1問目 / 10問";
+  let n=3; $("timeAttackCountdown").textContent=n; clearInterval(timeAttackTimer);
+  const cd=setInterval(()=>{n--; if(n>0){$("timeAttackCountdown").textContent=n}else{clearInterval(cd); $("timeAttackCountdown").textContent="GO!"; timeAttackRunning=true; timeAttackStart=performance.now(); $("timeAttackInputArea").style.display="flex"; nextTimeAttackQuestion(); timeAttackTimer=setInterval(()=>{if(!timeAttackRunning)return; timeAttackTime=(performance.now()-timeAttackStart)/1000; updateTimeAttackTime()},50); setTimeout(()=>{if(timeAttackRunning){$("timeAttackCountdown").textContent=""; updateTimeAttackTime()}},400)}},700);
+}
+function updateTimeAttackTime(){ $("timeAttackTime").textContent=timeAttackTime.toFixed(2)+"秒"; }
+function nextTimeAttackQuestion(){
+  if(timeAttackCorrect>=10){endTimeAttack(true);return;}
+  timeAttackCurrent=makeTimeAttackQuestion(); $("timeAttackQuestion").textContent=timeAttackCurrent.q+" のとき、xは？"; $("timeAttackAnswerInput").value=""; $("timeAttackAnswerInput").disabled=false; $("timeAttackAnswerInput").focus(); $("timeAttackResult").style.display="none"; $("timeAttackCount").textContent=(timeAttackCorrect+1)+"問目 / 10問";
+}
+function timeKeypadInput(ch){const i=$("timeAttackAnswerInput");if(i.disabled||!timeAttackRunning)return;if(ch==='-'&&i.value.length>0)return;if(ch==='-'&&i.value.includes('-'))return;i.value+=ch;i.focus()}
+function timeKeypadBackspace(){const i=$("timeAttackAnswerInput");if(i.disabled||!timeAttackRunning)return;i.value=i.value.slice(0,-1);i.focus()}
+function timeKeypadClear(){const i=$("timeAttackAnswerInput");if(i.disabled||!timeAttackRunning)return;i.value="";i.focus()}
+function answerTimeAttack(){
+  if(!timeAttackRunning||!timeAttackCurrent)return;
+  const i=$("timeAttackAnswerInput"),v=Number(i.value); if(i.value.trim()===""||!Number.isFinite(v))return;
+  if(v===timeAttackCurrent.ans){
+    timeAttackCorrect++; timeAttackTime=(performance.now()-timeAttackStart)/1000; updateTimeAttackTime();
+    $("timeAttackCount").textContent=timeAttackCorrect+"問 / 10問"; i.disabled=true;
+    if(timeAttackCorrect>=10){endTimeAttack(true);return;}
+    setTimeout(()=>{if(timeAttackRunning)nextTimeAttackQuestion()},80);
+  }else{
+    endTimeAttack(false);
+  }
+}
+$("timeAttackAnswerInput").addEventListener("keydown",e=>{if(e.key==="Enter")answerTimeAttack()});
+function endTimeAttack(cleared){
+  clearInterval(timeAttackTimer); timeAttackRunning=false; timeAttackTime=(performance.now()-timeAttackStart)/1000; updateTimeAttackTime(); $("timeAttackInputArea").style.display="none"; $("timeAttackCountdown").textContent="";
+  $("timeAttackQuestion").textContent=cleared?"🏆 10問クリア！":"💥 不正解！ タイムアタック終了";
+  $("timeAttackResult").style.display="block";
+  $("timeAttackResult").innerHTML=cleared?"<b>クリアタイム："+timeAttackTime.toFixed(2)+"秒</b><br><br><button class='mainbtn' onclick='startTimeAttackMode()'>もう一度</button>":"<b>"+timeAttackCorrect+"問正解で終了</b><br><br><button class='mainbtn' onclick='startTimeAttackMode()'>もう一度</button>";
+}
+
+</script>
+</body>
+</html>
