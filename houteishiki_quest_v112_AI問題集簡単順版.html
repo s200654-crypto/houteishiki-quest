@@ -1,0 +1,1510 @@
+<!-- 方程式クエスト v112 -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>方程式クエスト</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,"Yu Gothic",sans-serif;background:radial-gradient(circle at top,#273b80,#11152f 55%,#090b18);color:#fff;padding:24px}
+.app{width:min(900px,96vw);margin:auto}
+.title-screen{text-align:center;min-height:calc(100vh - 48px);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:10px}
+.title-screen h1{font-size:clamp(34px,6vw,52px);margin:0;text-shadow:0 4px #000}
+.title-screen p{font-size:17px;color:#cbd5ff;margin:5px 0 14px}
+.title-buttons{width:min(480px,90vw);display:grid;gap:8px}
+.title-btn{border:3px solid #7183ff;background:#29346b;color:#fff;border-radius:14px;padding:10px 14px;font-size:17px;font-weight:900;cursor:pointer;box-shadow:0 3px 0 #11152f}
+.title-btn:hover{background:#3a4b91;transform:translateY(-1px)}.title-reset{display:block!important;visibility:visible!important;width:min(480px,90vw);margin:16px auto 0;border:2px solid #ff7185;background:#4b2030;color:#fff;border-radius:12px;padding:9px 14px;font-size:14px;font-weight:900;cursor:pointer;box-shadow:0 2px 0 #11152f}.title-reset:hover{background:#6b2940}.home-btn{position:fixed;top:14px;left:14px;z-index:10;display:none}
+.header{text-align:center}h1{font-size:clamp(32px,7vw,58px);margin:0;text-shadow:0 4px #000}.sub{color:#cbd5ff}.panel{background:#111837ee;border:3px solid #7183ff;border-radius:24px;padding:26px;box-shadow:0 0 35px #6478ff44;margin-top:18px}.stats{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.stat{background:#252f60;border:2px solid #4d5ba5;border-radius:12px;padding:8px 14px;font-weight:800}.coin{color:#ffd45a}.hp{color:#ff7185}.bar{height:11px;background:#11162f;border-radius:20px;overflow:hidden;margin:12px 0 24px}.progress{height:100%;background:#55e6a5;width:0;transition:.3s}.question{font-size:clamp(22px,4vw,32px);font-weight:900;text-align:center;margin:20px 0 24px}.options{display:grid;grid-template-columns:1fr 1fr;gap:14px}.option,.navbtn{border:3px solid #5363b2;background:#29346b;color:#fff;border-radius:16px;padding:16px;font-size:19px;font-weight:800;cursor:pointer}.option:hover,.navbtn:hover{background:#354587}.correct{background:#176c4d!important;border-color:#55e6a5!important}.wrong{background:#7c2942!important;border-color:#ff7185!important}.feedback{display:none;margin-top:16px;padding:14px;border-radius:12px;background:#202849}.next,.restart,.save{display:block;margin:18px auto 0;border:0;border-radius:13px;padding:13px 26px;background:#ffd45a;color:#251b00;font-weight:900;font-size:16px;cursor:pointer}.next:disabled{opacity:.35}.menu{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}.navbtn{font-size:15px;padding:11px 16px}.screen{display:none}.screen.active{display:block}.mistake{border:2px solid #4d5ba5;border-radius:14px;padding:15px;margin:12px 0;background:#202849}.ranking-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid #39477f}.ranking-row:last-child{border-bottom:0}.delete-ranking{border:1px solid #ff7185;background:#4b2030;color:#fff;border-radius:8px;padding:5px 9px;cursor:pointer;font-weight:800}.delete-ranking:hover{background:#6b2940}.mistake b{color:#ff9baa}.create{background:#f7f9ff;color:#17213d;border-color:#7183ff}.create h2{color:#17213d}.create>p{color:#4d5b7a}.create label{display:block;margin:12px 0 5px;font-weight:800;color:#25345c}.create textarea{width:100%;padding:12px;border-radius:10px;border:2px solid #aab7d8;background:#fff;color:#17213d;font-size:14px;font-family:monospace;resize:vertical}.create input{width:100%;padding:13px;border-radius:10px;border:2px solid #aab7d8;background:#fff;color:#17213d;font-size:17px}.create input:focus{outline:3px solid #cbd5ff;border-color:#5363b2}.create .hint{color:#617092}.create .problem-row{background:#fff;border:2px solid #c5cee5;box-shadow:0 3px 10px #17213d14}.create .problem-row b{color:#25345c}.create .problem-row .remove{background:#ffe7ec;color:#a51f3d}.create .navbtn{background:#e8edff;color:#263a78;border-color:#7183ff}.create .setcard,.create .mistake{background:#fff;color:#17213d;border-color:#c5cee5}.create .created{margin-top:18px;color:#4d5b7a}.share-box{margin-top:24px;padding:18px;border:2px solid #c5cee5;border-radius:16px;background:#fff}.share-box h3{margin-top:0;color:#25345c}.share-box textarea{width:100%;box-sizing:border-box;min-height:90px;padding:12px;border:2px solid #aab7d8;border-radius:10px;background:#fff;color:#17213d;font-family:monospace;font-size:14px;resize:vertical}.share-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.share-actions .navbtn{margin:0}.tabs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}.setcard{border:2px solid #4d5ba5;border-radius:16px;padding:16px;margin:12px 0;background:#202849}.setcard h3{margin:0 0 6px}.tag{display:inline-block;padding:4px 9px;border-radius:999px;background:#354587;margin-bottom:8px;font-size:13px;font-weight:800}.playset{margin-top:10px;border:0;border-radius:11px;padding:10px 16px;background:#ffd45a;color:#251b00;font-weight:900;cursor:pointer}.copy-code-btn{display:inline-block!important;visibility:visible!important;margin-top:10px;margin-left:8px;background:#e8edff!important;color:#263a78!important;border-color:#7183ff!important}.delete-set{margin-top:10px;margin-left:8px;border:2px solid #ff7185;border-radius:11px;padding:8px 12px;background:#7c2942;color:#fff;font-weight:900;cursor:pointer}.problem-row{margin:12px 0;padding:12px;border:2px solid #39477f;border-radius:12px;background:#171f42}.remove{float:right;border:0;border-radius:8px;padding:5px 8px;cursor:pointer}.hint{color:#aeb9df;font-size:14px}.empty{text-align:center;color:#aeb9df;padding:20px}
+.profile-card{max-width:700px;margin:0 auto}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.profile-preview{border:3px solid #7183ff;border-radius:20px;padding:22px;text-align:center;background:var(--profile-bg,linear-gradient(135deg,#202849,#111837));margin-bottom:18px}.profile-avatar{font-size:64px}.profile-name{font-size:28px;font-weight:1000;margin:5px 0}.profile-message{font-size:16px;color:#dbe2ff}.profile-section{border:2px solid #4d5ba5;border-radius:16px;padding:15px;margin:12px 0;background:#202849}.profile-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.profile-item{border:2px solid #5363b2;border-radius:12px;padding:12px;background:#171f42;color:#fff;cursor:pointer;font-weight:800}.profile-item.locked{opacity:.45;cursor:not-allowed}.profile-item.selected{border-color:#ffd45a;background:#354587;color:#ffd45a}.profile-small{font-size:12px;color:#aeb9df;margin-top:5px}.profile-input{width:100%;box-sizing:border-box;padding:11px;border-radius:10px;border:2px solid #7183ff;background:#fff;color:#17213d;font-size:16px;margin-top:8px}
+#result{text-align:center}.big{font-size:68px;font-weight:1000;color:#ffd45a}.equation-guide .guide-card{background:#202849;border:2px solid #4d5ba5;border-radius:16px;padding:16px;margin:12px 0}.equation-guide .guide-card h3{margin:0 0 8px;color:#ffd45a}.equation-guide .example{background:#171f42;border-radius:12px;padding:12px;margin-top:10px;font-size:18px;font-weight:800}.equation-guide .point{color:#cbd5ff}.equation-guide .guide-back{margin-top:18px}.equation-guide .arrow{color:#55e6a5;font-weight:900}@media(max-width:600px){.options{grid-template-columns:1fr}.panel{padding:18px}.title-screen{padding:7px;min-height:calc(100vh - 30px)}.title-screen h1{font-size:clamp(30px,9vw,44px)}.title-screen p{font-size:15px;margin:3px 0 9px}.title-buttons{gap:6px;width:min(440px,94vw)}.title-btn{padding:8px 10px;font-size:15px;border-radius:12px;box-shadow:0 2px 0 #11152f}}
+
+.survival-time{font-size:2rem;font-weight:800;text-align:center;margin:10px 0}
+#survivalQuestion{font-size:1.4rem}
+.survival-countdown{font-size:4rem;font-weight:1000;text-align:center;min-height:70px;margin:8px 0}
+#survivalStart{font-size:22px;min-width:220px}
+.survival-input-area{display:flex;flex-direction:column;align-items:center;gap:10px;margin:14px 0}
+#survivalAnswerInput{width:min(320px,90vw);font-size:28px;text-align:center;padding:12px;border-radius:12px;border:2px solid #7183ff}
+.keypad{display:grid;grid-template-columns:repeat(3,82px);gap:8px;justify-content:center;margin-top:4px}
+.keypad button{font-size:24px;font-weight:800;padding:13px 0;border:2px solid #7183ff;border-radius:12px;background:#29346b;color:#fff;cursor:pointer}
+.keypad button:active{transform:scale(.96);background:#3a4b91}
+.keypad .wide{grid-column:span 2}
+@media(max-width:600px){.keypad{grid-template-columns:repeat(3,74px)}.keypad button{font-size:22px}}
+.timeattack-levels{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px auto;max-width:600px}.timeattack-level{border:3px solid #7183ff;background:#29346b;color:#fff;border-radius:16px;padding:18px 10px;font-size:20px;font-weight:900;cursor:pointer}.timeattack-level:hover{background:#3a4b91}.timeattack-level.locked{border-color:#777;background:#25283b;color:#aab0c8;cursor:not-allowed}.hell-note{margin:8px auto 0;text-align:center;color:#ffb6c2;font-weight:800}.timeattack-info{text-align:center;color:#cbd5ff}.timeattack-time{font-size:2rem;font-weight:900;text-align:center}.timeattack-count{text-align:center;font-weight:900;font-size:18px} @media(max-width:600px){.timeattack-levels{grid-template-columns:1fr}}
+
+.loading-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(10,16,38,.92);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease}.loading-overlay.show{opacity:1;visibility:visible;pointer-events:auto}.loading-card{text-align:center;padding:28px 34px;border:2px solid #7183ff;border-radius:20px;background:#202849;box-shadow:0 18px 50px rgba(0,0,0,.35);min-width:230px}.loading-spinner{width:42px;height:42px;margin:0 auto 14px;border:4px solid #39477f;border-top-color:#ffd45a;border-radius:50%;animation:loadingSpin .8s linear infinite}.loading-title{font-size:21px;font-weight:900}.loading-sub{margin-top:6px;color:#aeb9df;font-size:13px}@keyframes loadingSpin{to{transform:rotate(360deg)}}
+
+.guide-intro{text-align:center;color:#cbd5ff;font-size:17px;line-height:1.7}.guide-video{margin:20px auto;padding:20px;max-width:650px;background:#0c1230;border:3px solid #7183ff;border-radius:20px;text-align:center;box-shadow:0 10px 30px #0005}.guide-video-title{font-size:21px;font-weight:900;color:#ffd45a;margin-bottom:14px}.guide-patterns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 auto 15px}.guide-pattern{border:2px solid #5363b2;background:#202849;color:#fff;border-radius:12px;padding:9px 12px;font-weight:900;cursor:pointer}.guide-pattern.active{background:#3a4b91;border-color:#ffd45a;color:#ffd45a}.guide-pause{display:block;margin:10px auto 14px;border:2px solid #7183ff;background:#202849;color:#fff;border-radius:12px;padding:9px 18px;font-weight:900;cursor:pointer}.guide-pause:hover{background:#354587}.guide-scene{position:relative;display:block;visibility:visible;height:280px;overflow:hidden;background:radial-gradient(circle at center,#1c2b60,#090f29 70%);border-radius:16px;border:2px solid #39477f}.guide-eq{position:absolute;left:0;right:0;top:105px;display:flex;align-items:center;justify-content:center;font-size:clamp(28px,6vw,44px);font-weight:1000;letter-spacing:1px;opacity:0;white-space:nowrap}.guide-bubble{position:absolute;left:50%;transform:translateX(-50%);top:48px;padding:8px 16px;border-radius:999px;background:#29346b;border:2px solid #7183ff;color:#fff;font-weight:900;opacity:0;white-space:nowrap}.guide-caption{position:absolute;bottom:12px;left:0;right:0;color:#8f9bc5;font-size:13px}.guide-pattern-note{margin-top:10px;color:#aeb9df;font-size:13px}.pattern-plus .e1,.pattern-plus .p1{animation:show1 16s infinite}.pattern-plus .e2,.pattern-plus .p2{animation:show2 16s infinite}.pattern-plus .e3,.pattern-plus .p3{animation:show3 16s infinite}.pattern-plus .e4,.pattern-plus .p4{animation:show4 16s infinite}.pattern-minus .e1{animation:show1 16s infinite}.pattern-minus .e2{animation:show2 16s infinite}.pattern-minus .e3{animation:show3 16s infinite}.pattern-minus .e4{animation:show4 16s infinite}.pattern-multiply .e1{animation:show1 16s infinite}.pattern-multiply .e2{animation:show2 16s infinite}.pattern-multiply .e3{animation:show3 16s infinite}.pattern-multiply .e4{animation:show4 16s infinite}.pattern-divide .e1{animation:show1 16s infinite}.pattern-divide .e2{animation:show2 16s infinite}.pattern-divide .e3{animation:show3 16s infinite}.pattern-divide .e4{animation:show4 16s infinite}.pattern-two .e1{animation:show1 16s infinite}.pattern-two .e2{animation:show2 16s infinite}.pattern-two .e3{animation:show3 16s infinite}.pattern-two .e4{animation:show4 16s infinite}.pattern-minus .p1,.pattern-multiply .p1,.pattern-divide .p1,.pattern-two .p1{animation:show1 16s infinite}.pattern-minus .p2,.pattern-multiply .p2,.pattern-divide .p2,.pattern-two .p2{animation:show2 16s infinite}.pattern-minus .p3,.pattern-multiply .p3,.pattern-divide .p3,.pattern-two .p3{animation:show3 16s infinite}.pattern-minus .p4,.pattern-multiply .p4,.pattern-divide .p4,.pattern-two .p4{animation:show4 16s infinite}@keyframes show1{0%,6%{opacity:0;transform:translateY(18px) scale(.96)}10%,24%{opacity:1;transform:translateY(0) scale(1)}28%,100%{opacity:0;transform:translateY(-10px) scale(.98)}}@keyframes show2{0%,27%{opacity:0;transform:translateY(18px)}31%,45%{opacity:1;transform:translateY(0)}49%,100%{opacity:0;transform:translateY(-10px)}}@keyframes show3{0%,48%{opacity:0;transform:translateY(18px)}52%,66%{opacity:1;transform:translateY(0)}70%,100%{opacity:0;transform:translateY(-10px)}}@keyframes show4{0%,69%{opacity:0;transform:scale(.9)}73%,92%{opacity:1;transform:scale(1.05)}100%{opacity:0;transform:scale(1)}}
+@media(max-width:600px){.memory-grid{grid-template-columns:1fr}.guide-video{padding:15px}.guide-scene{height:280px}.guide-eq{gap:7px}.guide-bubble{font-size:14px;max-width:90%}}</style>
+<style>
+#deleteModal,#importConfirmModal,#rankingDeleteModal,#resetDataModal,#resetDataConfirmModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;align-items:center;justify-content:center;padding:20px;box-sizing:border-box}
+#deleteModal.show,#importConfirmModal.show,#rankingDeleteModal.show,#resetDataModal.show,#resetDataConfirmModal.show{display:flex}
+#resetDataModal,#resetDataConfirmModal{z-index:100000}
+.action-message{white-space:pre-line;position:fixed;left:50%;top:22px;transform:translateX(-50%);z-index:10001;display:none;min-width:min(320px,calc(100vw - 32px));max-width:calc(100vw - 32px);box-sizing:border-box;background:#1f9d55;color:#fff;padding:12px 14px 12px 20px;border-radius:14px;box-shadow:0 10px 30px #0005;text-align:center;font-weight:900;font-size:17px;align-items:center;justify-content:center;gap:12px}.action-message.show{display:flex}.action-message button{border:0;background:transparent;color:#fff;font-size:25px;font-weight:900;cursor:pointer;padding:0 4px;line-height:1}.delete-dialog{width:min(420px,100%);background:#fff;color:#17213d;border:3px solid #7183ff;border-radius:20px;padding:24px;box-shadow:0 15px 50px #0008;text-align:center}
+.delete-dialog h3{margin:0 0 10px;font-size:22px}.delete-dialog p{margin:0 0 20px;word-break:break-word}.delete-dialog button{border:0;border-radius:11px;padding:12px 20px;font-weight:900;cursor:pointer;font-size:16px;margin:4px}.delete-cancel{background:#e8edff;color:#263a78}.delete-ok{background:#d92f55;color:#fff}
+.mission-card{border:2px solid #4d5ba5;border-radius:16px;padding:15px;margin:12px 0;background:#202849}.mission-card.done{border-color:#55e6a5;background:#163b32}.mission-card .mission-title{font-weight:900;font-size:17px}.mission-card .mission-desc{margin:6px 0;color:#cbd5ff}.mission-card .mission-progress{font-size:14px;color:#aeb9df}.mission-card.done .mission-progress{color:#55e6a5;font-weight:800}.mission-badge{float:right;font-size:22px}.mission-tabs{margin-top:14px}.mission-summary{text-align:center;margin:12px 0 18px;font-weight:900;color:#ffd45a}.mission-date{margin-top:7px;font-size:13px;color:#7ff0bd;font-weight:800}</style>
+<style>
+
+
+
+
+
+
+
+
+.first-setup-btn:active{transform:translateY(4px);box-shadow:0 3px 0 #249c6a}
+to{transform:scale(1);opacity:1}}
+to{transform:translateY(7px)}}
+</style>
+</head>
+<body>
+<div id="loadingOverlay" class="loading-overlay" aria-hidden="true"><div class="loading-card"><div class="loading-spinner"></div><div class="loading-title">読み込み中…</div><div class="loading-sub">画面を準備しています</div></div></div>
+<button class="navbtn home-btn" onclick="goHome()">🏠 タイトルへ</button>
+<div class="app">
+<section id="titleScreen" class="title-screen">
+  <h1>⚔ 方程式クエスト ⚔</h1>
+  <p>中1数学をゲーム感覚で攻略！</p>
+  <div class="title-buttons">
+    <button class="title-btn" onclick="loadScreen('library',()=>showSets('all'))">📚 問題集を選ぶ</button>
+    <button class="title-btn" onclick="loadScreen('import')">📥 問題集を読み込む</button>
+    <button class="title-btn" onclick="loadScreen('create',()=>{if(problemCount===0)addProblemInput()})">✏️ 問題集を作る</button>
+    <button class="title-btn" onclick="loadScreen('mistakes',()=>showMistakes())">❌ 間違えた問題</button>
+    <button class="title-btn" onclick="loadAction(()=>startSurvivalMode())">🔥 サバイバル</button>
+    <button class="title-btn" onclick="loadAction(()=>startTimeAttackMode())">⚡ タイムアタック</button>
+    <button class="title-btn" onclick="loadScreen('missions',()=>renderMissions('all'))">🏆 ミッション</button>
+    <button class="title-btn" onclick="loadScreen('profile',()=>renderProfile())">👤 マイルーム</button>
+    <button class="title-btn" onclick="loadScreen('ranking',()=>showMyRanking())">🏅 自分のランキング</button>
+    <button class="title-btn" onclick="loadScreen('howto')">📖 遊び方</button>
+  </div>
+  <button class="title-reset" type="button" onclick="openResetDataModal()">🔄 ランキング・進行状況を初期化</button>
+
+</section>
+<section id="survival" class="screen panel">
+  <div class="topbar">
+    <h2>🔥 サバイバル</h2>
+    <div id="survivalTime" class="survival-time">15秒</div>
+  </div>
+  <p>正解すると <b>+5秒</b>、不正解だと <b>-1秒</b>！ 間違えたら正解するまで次へ進めません。</p>
+  <div id="survivalCountdown" class="survival-countdown"></div>
+  <button id="survivalStart" class="save" onclick="startSurvivalGame()">▶ スタート</button>
+  <div id="survivalQuestion" class="question"></div>
+  <div id="survivalInputArea" class="survival-input-area">
+    <input id="survivalAnswerInput" type="text" inputmode="numeric" autocomplete="off" placeholder="xの値を入力">
+    <div class="keypad" aria-label="数字キーパッド">
+      <button type="button" onclick="keypadInput('7')">7</button>
+      <button type="button" onclick="keypadInput('8')">8</button>
+      <button type="button" onclick="keypadInput('9')">9</button>
+      <button type="button" onclick="keypadInput('4')">4</button>
+      <button type="button" onclick="keypadInput('5')">5</button>
+      <button type="button" onclick="keypadInput('6')">6</button>
+      <button type="button" onclick="keypadInput('1')">1</button>
+      <button type="button" onclick="keypadInput('2')">2</button>
+      <button type="button" onclick="keypadInput('3')">3</button>
+      <button type="button" onclick="keypadInput('-')">−</button>
+      <button type="button" onclick="keypadInput('0')">0</button>
+      <button type="button" onclick="keypadBackspace()">⌫</button>
+      <button type="button" class="wide" onclick="keypadClear()">クリア</button>
+      <button type="button" onclick="answerSurvival()">回答</button>
+    </div>
+    <button id="survivalAnswerButton" class="mainbtn" style="display:none" onclick="answerSurvival()">回答する</button>
+  </div>
+  <div id="survivalResult" class="feedback" style="display:none"></div>
+  <div id="survivalCorrectCount" class="survival-count">正解：0問</div>
+</section>
+
+<section id="timeattack" class="screen panel">
+  <div class="topbar"><h2>⚡ タイムアタック</h2><div id="timeAttackTime" class="timeattack-time">0.00秒</div></div>
+  <p class="timeattack-info">10問を何秒でクリアできるか挑戦！ 間違えたら即終了。問題はその場でランダム生成されます。</p>
+  <div id="timeAttackSelect">
+    <h3 style="text-align:center">難易度を選ぼう</h3>
+    <div class="timeattack-levels">
+      <button class="timeattack-level" onclick="startTimeAttack(0)">🟢 簡単</button>
+      <button class="timeattack-level" onclick="startTimeAttack(1)">🟡 普通</button>
+      <button class="timeattack-level" onclick="startTimeAttack(2)">🔴 難しい</button>
+      <button id="timeAttackHellButton" class="timeattack-level locked" onclick="startTimeAttack(3)">🔒 地獄<br><small>難しいを3回クリアで解放</small></button>
+    </div>
+    <div id="timeAttackHellStatus" class="hell-note">🔒 地獄は「難しい」を10回クリアすると解放</div>
+  </div>
+  <div id="timeAttackCountdown" class="survival-countdown"></div>
+  <div id="timeAttackQuestion" class="question"></div>
+  <div id="timeAttackInputArea" class="survival-input-area" style="display:none">
+    <input id="timeAttackAnswerInput" type="text" inputmode="numeric" autocomplete="off" placeholder="xの値を入力">
+    <div class="keypad" aria-label="数字キーパッド">
+      <button type="button" onclick="timeKeypadInput('7')">7</button><button type="button" onclick="timeKeypadInput('8')">8</button><button type="button" onclick="timeKeypadInput('9')">9</button>
+      <button type="button" onclick="timeKeypadInput('4')">4</button><button type="button" onclick="timeKeypadInput('5')">5</button><button type="button" onclick="timeKeypadInput('6')">6</button>
+      <button type="button" onclick="timeKeypadInput('1')">1</button><button type="button" onclick="timeKeypadInput('2')">2</button><button type="button" onclick="timeKeypadInput('3')">3</button>
+      <button type="button" onclick="timeKeypadInput('-')">−</button><button type="button" onclick="timeKeypadInput('0')">0</button><button type="button" onclick="timeKeypadBackspace()">⌫</button>
+      <button type="button" class="wide" onclick="timeKeypadClear()">クリア</button><button type="button" onclick="answerTimeAttack()">回答</button>
+    </div>
+  </div>
+  <div id="timeAttackResult" class="feedback" style="display:none"></div>
+  <div id="timeAttackCount" class="timeattack-count">1問目 / 10問</div>
+</section>
+
+<section id="game" class="screen panel">
+<div id="playing">
+<div class="stats"><div class="stat">問題 <span id="stage">1</span>/<span id="total">10</span></div><div class="stat">正解 <span id="score">0</span>問</div></div>
+<div class="bar"><div class="progress" id="progress"></div></div>
+<div class="question" id="question"></div><div class="options" id="options"></div>
+<div class="feedback" id="feedback"></div><button class="next" id="next" disabled>次へ ▶</button>
+</div>
+<div id="result" style="display:none">
+<h2>🎉 クイズ終了！</h2>
+<div class="big" id="finalScore"></div>
+<p id="rank"></p>
+<div id="resultMistakes"></div>
+<button class="restart" onclick="restartQuiz()">もう一度挑戦</button>
+</div>
+</section>
+<section id="missions" class="screen panel">
+<h2>🏆 ミッション</h2>
+<p>モードごとのミッションをクリアしていこう！</p>
+<div class="tabs mission-tabs">
+  <button class="navbtn" onclick="loadAndShowMissions('all')">すべて</button>
+  <button class="navbtn" onclick="loadAndShowMissions('timeattack')">⚡ タイムアタック</button>
+  <button class="navbtn" onclick="loadAndShowMissions('survival')">🔥 サバイバル</button>
+  <button class="navbtn" onclick="loadAndShowMissions('other')">🌟 その他</button>
+</div>
+<div id="missionList"></div>
+</section>
+<section id="ranking" class="screen panel">
+<h2>🏅 自分のランキング</h2>
+<p>このブラウザに保存された自己記録です。</p>
+<div class="mistake"><h3>🔥 サバイバル</h3><div id="survivalRanking"></div></div>
+<div class="mistake"><h3>⚡ タイムアタック：簡単</h3><div id="timeAttackRankingEasy"></div></div>
+<div class="mistake"><h3>⚡ タイムアタック：普通</h3><div id="timeAttackRankingNormal"></div></div>
+<div class="mistake"><h3>⚡ タイムアタック：難しい</h3><div id="timeAttackRankingHard"></div></div>
+<div class="mistake"><h3>🔥 タイムアタック：地獄</h3><div id="timeAttackRankingHell"></div></div>
+<button class="restart" onclick="goHome()">🏠 タイトルに戻る</button>
+</section>
+<section id="howto" class="screen panel">
+<h2>📖 遊び方</h2>
+<div class="mistake">
+<h3>🎮 まずは問題集を選ぼう</h3>
+<p>「📚 問題集を選ぶ」から、挑戦したい問題集を選びます。</p>
+<p>🤖 AIが作った問題、👤 人が作った問題、🌐 すべての問題集から選べます。</p>
+</div>
+<div class="mistake">
+<h3>✏️ 自分で問題集を作る</h3>
+<p>「📚 問題集を作る」でタイトル・説明を設定し、方程式を1〜5問入力します。</p>
+<p>答え・4択・解説は自動で作られます。作った問題集はあとから削除できます。</p>
+</div>
+<div class="mistake">
+<h3>📝 通常クイズ</h3>
+<p>問題集の問題を順番に解きます。4つの選択肢から答えを選び、最後に結果を確認します。</p>
+<p>間違えた問題は、問題・自分の答え・正解・解説を確認できます。</p>
+</div>
+<div class="mistake">
+<h3>❌ 間違えた問題</h3>
+<p>「❌ 間違えた問題」では、このブラウザに記録された間違いをあとから復習できます。</p>
+</div>
+<div class="mistake">
+<h3>🔥 サバイバル</h3>
+<p>最初は<b>15秒</b>。正解すると <b>+5秒</b>、不正解すると <b>-1秒</b>です。</p>
+<p>不正解の場合は、正解するまで同じ問題に挑戦します。0秒になるとゲーム終了です。</p>
+<p>難易度は<b>10問ごと</b>に上がります。<b>1〜10問目は簡単、11〜20問目は普通、21〜30問目は難しい、31問目以降はさらに難しい</b>問題になります。</p>
+</div>
+<div class="mistake">
+<h3>⚡ タイムアタック</h3>
+<p>3秒のカウントダウン後にスタート。方程式を解いて、<b>10問連続正解</b>を目指します。</p>
+<p>答えは数字で入力します。正解するとすぐ次の問題へ進み、不正解するとその時点で終了します。</p>
+<p>クリアしたら、10問を解き終えるまでの<b>クリアタイム</b>が表示されます。速さと正確さの勝負です。</p>
+</div>
+<div class="mistake">
+<h3>🔥 タイムアタック「地獄」</h3>
+<p>「難しい」を10回クリアすると解放されます。＋や−が複数入った、暗算でも解ける少し難しめの方程式に挑戦します。1問10〜30秒程度を想定しています。</p>
+</div>
+<div class="mistake">
+<h3>🏆 ランキング</h3>
+<p>「🏅 自分のランキング」では、自分の記録を確認できます。</p>
+<p>🔥 サバイバルは<b>正解数が多いほど上位</b>、⚡ タイムアタックは<b>クリアタイムが短いほど上位</b>になります。</p>
+<p>記録はこのブラウザに保存されます。</p>
+</div>
+<div class="mistake">
+<h3>🏆 目標</h3>
+<p>通常クイズで正確に解く、サバイバルで長く続ける、タイムアタックで速く10問クリアする。3つの遊び方で方程式を攻略しよう！</p>
+</div>
+</section>
+
+<section id="library" class="screen panel">
+<h2>📚 問題集一覧</h2>
+<div class="tabs">
+<button class="navbtn" onclick="loadAndShowSets('all')">🌐 すべて</button>
+<button class="navbtn" onclick="loadAndShowSets('ai')">🤖 AIが作った問題</button>
+<button class="navbtn" onclick="loadAndShowSets('human')">👤 自分が作った問題</button>
+<button class="navbtn" onclick="loadAndShowSets('saved')">💾 保存した問題</button>
+</div>
+<div id="setList"></div>
+</section>
+
+
+<section id="mistakes" class="screen panel"><h2>❌ 間違えた問題</h2><p>このブラウザに記録されたミスが表示されます。</p><div id="mistakeList"></div><button class="restart" onclick="clearMistakes()">間違い記録を消す</button></section>
+
+<section id="import" class="screen panel create">
+<h2>📥 問題集を読み込む</h2>
+<p>共有コードを貼り付けて、保存した問題集をこの端末に追加します。</p>
+<label>共有コード</label>
+<textarea id="importCodeInput" rows="7" placeholder="EQ1-から始まるコードを貼り付け"></textarea>
+<button class="save" type="button" onclick="importSetFromDedicatedScreen()">📥 読み込む</button>
+<div id="importStatus" class="hint"></div>
+</section>
+
+<section id="create" class="screen panel create">
+<h2>📚 問題集を作る</h2>
+<p>タイトルをつけて、1〜5問の方程式をまとめて投稿できます。</p>
+<label>問題集タイトル</label>
+<input id="setTitle" placeholder="例：中1方程式 基礎①">
+<label>説明</label>
+<input id="setDesc" placeholder="例：方程式の基本問題です">
+
+<div id="problemInputs"></div>
+
+<button class="navbtn" onclick="addProblemInput()">＋ 問題を追加</button>
+<div id="setPreview"></div>
+<button class="save" type="button" onclick="saveSet()">📤 問題集を投稿する</button>
+
+<div class="created"><h3>📚 自分が作った問題集</h3><div id="createdList"></div></div>
+
+</section>
+
+<div id="deleteModal" aria-hidden="true">
+  <div class="delete-dialog" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <h3 id="deleteModalTitle">⚠️ 本当に削除しますか？</h3>
+    <p id="deleteModalText">この問題集を削除します。</p>
+    <button type="button" class="delete-cancel" onclick="cancelDelete()">キャンセル</button>
+    <button type="button" class="delete-ok" onclick="confirmDelete()">削除する</button>
+  </div>
+</div>
+<div id="rankingDeleteModal" aria-hidden="true">
+  <div class="delete-dialog" role="dialog" aria-modal="true" aria-labelledby="rankingDeleteTitle">
+    <h3 id="rankingDeleteTitle">⚠️ ランキング記録を削除しますか？</h3>
+    <p id="rankingDeleteText">このランキング記録を1件削除します。</p>
+    <button type="button" class="delete-cancel" onclick="cancelRankingDelete()">キャンセル</button>
+    <button type="button" class="delete-ok" onclick="confirmRankingDelete()">削除する</button>
+  </div>
+</div>
+<section id="profile" class="screen panel profile-card">
+  <h2>👤 マイルーム</h2>
+  <div class="profile-preview" id="profilePreview">
+    <div class="profile-avatar" id="profileAvatar">🧙</div>
+    <div class="profile-name" id="profileNameView">プレイヤー</div>
+    <div class="profile-message" id="profileMessageView">メッセージを選ぼう！</div>
+  </div>
+  <div class="profile-section">
+    <b>名前</b>
+    <input class="profile-input" id="profileNameInput" maxlength="16" placeholder="名前を入力">
+    <button class="navbtn" style="margin-top:10px" onclick="saveProfileName()">名前を保存</button>
+  </div>
+  <div class="profile-section"><b>💬 一言メッセージ</b><div class="profile-grid" id="profileMessageList"></div></div>
+  <div class="profile-section"><b>🖼️ 背景</b><div class="profile-grid" id="profileBackgroundList"></div></div>
+</section>
+<div id="resetDataModal" aria-hidden="true">
+  <div class="delete-dialog" role="dialog" aria-modal="true" aria-labelledby="resetDataTitle">
+    <h3 id="resetDataTitle">🔄 ランキング・進行状況を初期化しますか？</h3>
+    <p id="resetDataText">ランキング、ミッションの進行状況、間違えた問題の記録をすべて削除します。問題集そのものは削除されません。</p>
+    <button type="button" class="delete-cancel" onclick="cancelResetData()">いいえ</button>
+    <button type="button" class="delete-ok" onclick="nextResetDataConfirm()">はい</button>
+  </div>
+</div>
+<div id="resetDataConfirmModal" aria-hidden="true">
+  <div class="delete-dialog" role="dialog" aria-modal="true" aria-labelledby="resetDataConfirmTitle">
+    <h3 id="resetDataConfirmTitle">⚠️ 本当に初期化しますか？</h3>
+    <p id="resetDataConfirmText">ランキング・ミッションのクリア状況・クリア日・間違えた問題などの記録がすべて消えます。この操作は元に戻せません。</p>
+    <button type="button" class="delete-cancel" onclick="cancelResetData()">キャンセル</button>
+    <button type="button" class="delete-ok" onclick="confirmResetData()">初期化する</button>
+  </div>
+</div>
+
+<div id="importConfirmModal" aria-hidden="true">
+  <div class="delete-dialog" role="dialog" aria-modal="true" aria-labelledby="importConfirmTitle">
+    <h3 id="importConfirmTitle">📥 この問題集を読み込みますか？</h3>
+    <p id="importConfirmText">タイトル：</p>
+    <button type="button" class="delete-cancel" onclick="cancelImportConfirm()">いいえ</button>
+    <button type="button" class="delete-ok" onclick="confirmImport()">はい</button>
+  </div>
+</div>
+<div id="actionMessage" class="action-message" role="status" aria-live="polite"><span id="actionMessageText"></span><button type="button" onclick="hideActionMessage()" aria-label="閉じる">×</button></div>
+
+<script>
+
+let resetDataStage=1;
+function openResetDataModal(){
+  resetDataStage=1;
+  const m=$("resetDataModal");
+  if(!m)return;
+  m.classList.add("show");
+  m.style.display="flex";
+  m.style.zIndex="100000";
+  m.setAttribute("aria-hidden","false");
+}
+function nextResetDataConfirm(){
+  resetDataStage=2;
+  const first=$("resetDataModal");
+  const second=$("resetDataConfirmModal");
+  if(first){
+    first.classList.remove("show");
+    first.style.display="none";
+    first.setAttribute("aria-hidden","true");
+  }
+  if(second){
+    second.classList.add("show");
+    second.style.display="flex";
+    second.style.zIndex="100001";
+    second.setAttribute("aria-hidden","false");
+  }
+}
+function cancelResetData(){
+  resetDataStage=1;
+  [$("resetDataModal"),$("resetDataConfirmModal")].forEach(m=>{
+    if(!m)return;
+    m.classList.remove("show");
+    m.style.display="none";
+    m.setAttribute("aria-hidden","true");
+  });
+}
+function confirmResetData(){
+  if(resetDataStage!==2)return;
+  localStorage.removeItem("rankingData");
+  localStorage.removeItem("missionState");
+  localStorage.removeItem("mistakes");
+  localStorage.removeItem("profileData");
+
+  // 初期化後も「初プレイ」は、このゲームを開いている時点で達成にする
+  const missionState = getMissionState();
+  missionState.firstOpen = true;
+  saveMissionState(missionState);
+  updateMissions();
+
+  cancelResetData();
+  showActionMessage("ランキング・進行状況を初期化しました！");
+} function showActionMessage(message){
+  let el=$("actionMessage");
+  if(!el){
+    el=document.createElement("div");
+    el.id="actionMessage";
+    el.className="action-message";
+    el.innerHTML='<span id="actionMessageText"></span><button type="button" aria-label="閉じる">×</button>';
+    document.body.appendChild(el);
+    el.querySelector("button").onclick=hideActionMessage;
+  }
+  const text=el.querySelector("#actionMessageText");
+  if(text)text.textContent="✓ "+message;
+  el.style.zIndex="999999";
+  el.classList.add("show");
+}
+function hideActionMessage(){
+  const el=$("actionMessage");
+  if(el)el.classList.remove("show");
+}
+
+let problemCount=0, problemNextId=0;
+function addProblemInput(){
+  if(document.querySelectorAll("#problemInputs .problem-row").length>=5){alert("問題は最大5問までです。");return;}
+  problemCount=document.querySelectorAll("#problemInputs .problem-row").length+1;
+  const id=++problemNextId;
+  let box=document.createElement("div");
+  box.className="problem-row";
+  box.id="problemRow"+id;
+  box.innerHTML=`<button class="remove" onclick="removeProblem(${id})">削除</button>
+    <b>問題${problemCount}</b>
+    <label>方程式</label>
+    <input id="expr${id}" placeholder="例：2x＋5＝15、2(x＋3)＝14" oninput="previewSet()">
+    <div id="pPrev${id}" class="hint">入力すると答え・4択・解説を自動生成します。</div>`;
+  $("problemInputs").appendChild(box);
+}
+function removeProblem(n){
+  let row=$("problemRow"+n);
+  if(row) row.remove();
+  [...document.querySelectorAll("#problemInputs .problem-row")].forEach((r,i)=>{let b=r.querySelector("b");if(b)b.textContent="問題"+(i+1);});
+  problemCount=document.querySelectorAll("#problemInputs .problem-row").length;
+  previewSet();
+}
+function makeEquationQuestion(expr){
+  let ans=solveEquation(expr);
+  if(ans===null)return null;
+  let candidates=new Set([ans]);
+  [1,-1,2,-2,3,-3,5,-5,10,-10].forEach(d=>{if(candidates.size<4)candidates.add(ans+d)});
+  let arr=[...candidates].slice(0,4).sort(()=>Math.random()-0.5);
+  return {q:`${expr} のとき、xは？`,a:arr.map(String),c:arr.indexOf(ans),e:`式を整理すると x = ${ans} になります。`,expr};
+}
+function previewSet(){
+  let box=$("setPreview"), rows=[...document.querySelectorAll('[id^="problemRow"]')];
+  let html="";
+  rows.forEach(row=>{
+    let id=row.id.replace("problemRow","");
+    let expr=$("expr"+id)?.value.trim();
+    if(!expr)return;
+    let item=makeEquationQuestion(expr);
+    if(!item){
+      $("pPrev"+id).textContent="⚠ 正しい一次方程式を入力してください。例：2x + 5 = 15";
+      return;
+    }
+    $("pPrev"+id).innerHTML=`🤖 自動生成：正解 x = ${item.a[item.c]} ／ 4択・解説も自動作成`;
+    html+=`<div class="mistake"><b>問題${id}</b>：${item.q}<br>正解：${item.a[item.c]}</div>`;
+  });
+  box.innerHTML=html;
+}
+function saveSet(){
+  const title=$("setTitle")?.value.trim()||"";
+  const desc=$("setDesc")?.value.trim()||"";
+  const rows=[...document.querySelectorAll("#problemInputs .problem-row")];
+  if(!title){alert("問題集タイトルを入力してください。");return;}
+  if(rows.length<1){alert("問題を1〜5問入力してください。");return;}
+  if(rows.length>5){alert("問題は最大5問までです。");return;}
+
+  const problems=[];
+  for(const row of rows){
+    const id=row.id.replace("problemRow","");
+    const expr=$("expr"+id)?.value.trim()||"";
+    if(!expr){alert("すべての問題に方程式を入力してください。");return;}
+    const item=makeEquationQuestion(expr);
+    if(!item){alert("正しくない方程式が含まれています。例：2x＋5＝15");return;}
+    problems.push(item);
+  }
+
+  try{
+    const sets=JSON.parse(localStorage.getItem("questionSets")||"[]");
+    const newSet={id:Date.now()+Math.floor(Math.random()*1000),title,desc,author:"あなた",type:"human",passwordHash:"",problems};
+    sets.push(newSet);
+    localStorage.setItem("questionSets",JSON.stringify(sets));
+
+    $("setTitle").value="";$("setDesc").value="";
+    $("problemInputs").innerHTML="";$("setPreview").innerHTML="";problemCount=0;problemNextId=0;
+    showCreated();showSets("all");
+    goHome();
+    requestAnimationFrame(()=>showActionMessage("問題集を投稿しました！"));
+  }catch(e){
+    console.error(e);
+    alert("問題集を保存できませんでした。ブラウザの保存領域を確認してください。");
+  }
+}
+function getAllSets(){
+  let custom=[];
+  try{const d=JSON.parse(localStorage.getItem("questionSets")||"[]");if(Array.isArray(d))custom=d}catch(e){localStorage.removeItem("questionSets")}
+  custom=custom.filter(x=>x&&typeof x==="object");
+  // v29以前に共有コードから保存した問題集を「保存した問題」に移行
+  let migrated=false;
+  custom=custom.map(s=>{
+    if(s.type==="human" && s.author==="共有コード" && !s.passwordHash){
+      migrated=true;
+      return {...s,type:"saved"};
+    }
+    return s;
+  });
+  if(migrated)localStorage.setItem("questionSets",JSON.stringify(custom));
+  const toAiProblems=arr=>arr.map(q=>({q:q[0],a:q[1],c:q[2],e:q[3]}));
+  let ai=[
+    {id:"ai1",difficulty:1,title:"中1方程式 基礎",desc:"方程式の基本を練習しよう！",author:"AI",type:"ai",problems:toAiProblems(base.slice(0,5))},
+    {id:"ai2",difficulty:2,title:"方程式チャレンジ",desc:"少し難しい方程式に挑戦！",author:"AI",type:"ai",problems:toAiProblems(base.slice(5,10))},
+    {id:"ai3",difficulty:3,title:"方程式ステップアップ",desc:"少し複雑な方程式に挑戦！",author:"AI",type:"ai",problems:toAiProblems([
+      ["2x + 5 = 17 のとき、xは？",["5","6","7","8"],1,"17 − 5 = 12、12 ÷ 2 = 6"],
+      ["4x − 7 = 25 のとき、xは？",["6","7","8","9"],2,"25 + 7 = 32、32 ÷ 4 = 8"],
+      ["5x + 3 = 28 のとき、xは？",["4","5","6","7"],1,"28 − 3 = 25、25 ÷ 5 = 5"],
+      ["3(x − 2) = 15 のとき、xは？",["5","6","7","8"],2,"15 ÷ 3 = 5、5 + 2 = 7"],
+      ["6x − 8 = 28 のとき、xは？",["5","6","7","8"],1,"28 + 8 = 36、36 ÷ 6 = 6"]
+    ])},
+    {id:"ai4",difficulty:4,title:"方程式トレーニング",desc:"計算の手順を意識して解こう！",author:"AI",type:"ai",problems:toAiProblems([
+      ["7x + 1 = 36 のとき、xは？",["4","5","6","7"],1,"36 − 1 = 35、35 ÷ 7 = 5"],
+      ["8x − 6 = 26 のとき、xは？",["3","4","5","6"],1,"26 + 6 = 32、32 ÷ 8 = 4"],
+      ["2x + 9 = 23 のとき、xは？",["5","6","7","8"],2,"23 − 9 = 14、14 ÷ 2 = 7"],
+      ["4(x + 1) = 28 のとき、xは？",["5","6","7","8"],1,"28 ÷ 4 = 7、7 − 1 = 6"],
+      ["9x − 5 = 40 のとき、xは？",["4","5","6","7"],1,"40 + 5 = 45、45 ÷ 9 = 5"]
+    ])},
+    {id:"ai5",difficulty:5,title:"方程式ファイナル",desc:"これまでの力を使って全問正解を目指そう！",author:"AI",type:"ai",problems:toAiProblems([
+      ["3x + 7 = 25 のとき、xは？",["5","6","7","8"],1,"25 − 7 = 18、18 ÷ 3 = 6"],
+      ["5x − 9 = 21 のとき、xは？",["5","6","7","8"],1,"21 + 9 = 30、30 ÷ 5 = 6"],
+      ["2(x + 4) = 20 のとき、xは？",["4","5","6","7"],1,"20 ÷ 2 = 10、10 − 4 = 6"],
+      ["4x + 5 = 29 のとき、xは？",["5","6","7","8"],1,"29 − 5 = 24、24 ÷ 4 = 6"],
+      ["7x − 2 = 40 のとき、xは？",["5","6","7","8"],2,"40 + 2 = 42、42 ÷ 7 = 6"]
+    ])}
+  ];
+  return ai.concat(custom);
+}
+let pendingDeleteId=null;
+function removeCustomSet(id){
+  const targetId=String(id);
+  let sets;
+  try{ sets=JSON.parse(localStorage.getItem("questionSets")||"[]"); }catch(e){ alert("保存データを読み込めませんでした。"); return; }
+  const s=sets.find(x=>String(x.id)===targetId);
+  if(!s){ alert("削除する問題集が見つかりません。"); return; }
+  if(s.type==="ai"){ alert("AIの問題集は削除できません。"); return; }
+  pendingDeleteId=targetId;
+  $("deleteModalText").textContent="「"+(s.title||"この問題集")+"」を本当に削除しますか？";
+  $("deleteModal").classList.add("show");
+  $("deleteModal").setAttribute("aria-hidden","false");
+}
+function cancelDelete(){
+  pendingDeleteId=null;
+  $("deleteModal").classList.remove("show");
+  $("deleteModal").setAttribute("aria-hidden","true");
+}
+function confirmDelete(){
+  if(pendingDeleteId===null){cancelDelete();return;}
+  let sets;
+  try{sets=JSON.parse(localStorage.getItem("questionSets")||"[]");}catch(e){cancelDelete();alert("保存データを読み込めませんでした。");return;}
+  const targetId=pendingDeleteId;
+  const before=sets.length;
+  sets=sets.filter(x=>String(x.id)!==targetId);
+  if(sets.length===before){cancelDelete();alert("削除する問題集が見つかりませんでした。");return;}
+  localStorage.setItem("questionSets",JSON.stringify(sets));
+  cancelDelete();
+  showCreated();
+  showSets("all");
+  showActionMessage("問題集を削除しました！");
+}
+
+function bytesToBase64(bytes){
+  let binary="";
+  const chunk=0x8000;
+  for(let i=0;i<bytes.length;i+=chunk){
+    binary+=String.fromCharCode(...bytes.subarray(i,i+chunk));
+  }
+  return btoa(binary);
+}
+function base64ToBytes(base64){
+  const binary=atob(base64);
+  const bytes=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+  return bytes;
+}
+function makeShareCodeFromSet(s){
+  const payload={v:1,title:s.title,desc:s.desc||"",problems:s.problems.map(x=>({q:x.q,a:x.a,c:x.c,e:x.e,expr:x.expr||""}))};
+  const bytes=new TextEncoder().encode(JSON.stringify(payload));
+  return "EQ1-"+bytesToBase64(bytes).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"");
+}
+function copySetCode(id){
+  let sets=getAllSets(),s=sets.find(x=>String(x.id)===String(id));
+  if(!s){alert("問題集が見つかりません。");return;}
+  const code=makeShareCodeFromSet(s);
+  localStorage.setItem("lastShareCode",code);
+  const done=()=>showActionMessage("共有コードをコピーしました！");
+  if(navigator.clipboard&&window.isSecureContext){
+    navigator.clipboard.writeText(code).then(done).catch(()=>copySetCodeFallback(code,done));
+  }else copySetCodeFallback(code,done);
+}
+function copySetCodeFallback(code,done){
+  const ta=document.createElement("textarea");
+  ta.value=code;ta.style.position="fixed";ta.style.left="-9999px";ta.style.top="0";
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand("copy");done();}
+  catch(e){alert("コピーできませんでした。もう一度お試しください。\n共有コード：\n"+code);}
+  ta.remove();
+}
+let pendingImportData=null;
+function importSetFromCode(inputCode=null){
+  let code=String(inputCode!==null?inputCode:$('shareCodeInput')?.value||'').trim().replace(/\s+/g,'');
+  if(!code){alert('共有コードを入力してください。');return}
+  try{
+    if(!code.startsWith('EQ1-'))throw 0;
+    let raw=code.slice(4).replace(/-/g,'+').replace(/_/g,'/');
+    raw+='='.repeat((4-raw.length%4)%4);
+    const payload=JSON.parse(new TextDecoder().decode(base64ToBytes(raw)));
+    if(payload.v!==1||typeof payload.title!=='string'||!Array.isArray(payload.problems)||payload.problems.length<1||payload.problems.length>5)throw 0;
+    if(payload.problems.some(p=>!p||typeof p.q!=='string'||!Array.isArray(p.a)||p.a.length!==4||p.a.some(x=>typeof x!=='string')||!Number.isInteger(p.c)||p.c<0||p.c>3||typeof p.e!=='string'))throw 0;
+    const problems=payload.problems.map(x=>({q:x.q,a:x.a.map(String),c:x.c,e:x.e,expr:typeof x.expr==='string'?x.expr:''}));
+    pendingImportData={payload,problems};
+    $('importConfirmText').innerHTML='タイトル：<b>'+escapeHtml(payload.title)+'</b><br>'+problems.length+'問<br><br>これでよろしいですか？';
+    $('importConfirmModal').classList.add('show');
+    $('importConfirmModal').setAttribute('aria-hidden','false');
+  }catch(e){alert('共有コードが正しくありません。コード全体をコピーして、もう一度入力してください。');}
+}
+function cancelImportConfirm(){
+  pendingImportData=null;
+  $('importConfirmModal').classList.remove('show');
+  $('importConfirmModal').setAttribute('aria-hidden','true');
+}
+function confirmImport(){
+  if(!pendingImportData){cancelImportConfirm();return}
+  const {payload,problems}=pendingImportData;
+  let sets;
+  try{sets=JSON.parse(localStorage.getItem('questionSets')||'[]');}catch(e){cancelImportConfirm();alert('保存データを読み込めませんでした。');return}
+  sets.push({id:Date.now()+Math.floor(Math.random()*1000),title:payload.title,desc:payload.desc||'共有コードから読み込み',author:'共有コード',type:'saved',passwordHash:'',problems});
+  localStorage.setItem('questionSets',JSON.stringify(sets));
+  if($('importStatus'))$('importStatus').textContent='読み込みました！\n📚 タイトル：'+payload.title+'\n'+problems.length+'問';
+  cancelImportConfirm();
+  showCreated();
+  showSets('all');
+  goHome();
+  requestAnimationFrame(()=>showActionMessage('読み込みました！\n📚 タイトル：'+payload.title));
+}
+function importSetFromDedicatedScreen(){
+  const input=$('importCodeInput');
+  if(!input||!input.value.trim()){alert('共有コードを入力してください。');return}
+  importSetFromCode(input.value.trim());
+}
+function playSet(id){
+  let s=getAllSets().find(x=>String(x.id)===String(id));
+  if(!s)return;
+  qs=s.problems.map(x=>[x.q,x.a,x.c,x.e]);i=0;score=0;currentMistakes=[];currentSetId=s.id;
+  openScreen("game");$("playing").style.display="block";$("result").style.display="none";show();
+}
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+const base=[
+["x + 7 = 15 のとき、xは？",["6","7","8","9"],2,"15 − 7 = 8"],
+["3x = 21 のとき、xは？",["6","7","8","9"],1,"21 ÷ 3 = 7"],
+["2x + 3 = 11 のとき、xは？",["3","4","5","6"],1,"11 − 3 = 8、8 ÷ 2 = 4"],
+["5x − 4 = 16 のとき、xは？",["3","4","5","6"],1,"16 + 4 = 20、20 ÷ 5 = 4"],
+["4x + 2 = 18 のとき、xは？",["3","4","5","6"],1,"18 − 2 = 16、16 ÷ 4 = 4"],
+["7x − 5 = 30 のとき、xは？",["4","5","6","7"],1,"30 + 5 = 35、35 ÷ 7 = 5"],
+["2(x + 3) = 14 のとき、xは？",["3","4","5","6"],1,"14 ÷ 2 = 7、7 − 3 = 4"],
+["3x + 4 = x + 12 のとき、xは？",["2","3","4","5"],2,"3x − x = 12 − 4 → 2x = 8 → x = 4"],
+["6x + 2 = 20 のとき、xは？",["2","3","4","5"],1,"20 − 2 = 18、18 ÷ 6 = 3"],
+["4x − 9 = 15 のとき、xは？",["4","5","6","7"],2,"15 + 9 = 24、24 ÷ 4 = 6"]
+];
+let qs=[],i=0,score=0,answered=false,currentMistakes=[],currentSetId=null;
+const $=id=>document.getElementById(id);
+function load(){let custom=[];try{const d=JSON.parse(localStorage.getItem("customQuestions")||"[]");if(Array.isArray(d))custom=d}catch(e){localStorage.removeItem("customQuestions")}qs=base.concat(custom.filter(x=>x&&typeof x==="object").map(x=>[x.q,x.a,x.c,x.e]));}
+function start(){
+  currentSetId=null;
+  load();
+  qs.sort(()=>Math.random()-0.5);
+  i=0;score=0;currentMistakes=[];
+  $("playing").style.display="block";
+  $("result").style.display="none";
+  show();
+}
+function show(){
+  answered=false;
+  let q=qs[i];
+  // 問題文・問題内容は固定したまま、4択の位置だけ毎回ランダムにする
+  const correctAnswer=q[1][q[2]];
+  const shuffled=[...q[1]];
+  for(let j=shuffled.length-1;j>0;j--){
+    const k=Math.floor(Math.random()*(j+1));
+    [shuffled[j],shuffled[k]]=[shuffled[k],shuffled[j]];
+  }
+  q[1]=shuffled;
+  q[2]=shuffled.indexOf(correctAnswer);
+  $("stage").textContent=i+1;
+  $("total").textContent=qs.length;
+  $("score").textContent=score;
+  $("progress").style.width=((i)/Math.max(qs.length,1))*100+"%";
+  $("question").textContent=q[0];
+  $("options").innerHTML="";
+  $("feedback").style.display="none";
+  $("next").disabled=true;
+  q[1].forEach((x,n)=>{
+    let b=document.createElement("button");
+    b.className="option";
+    b.textContent=String.fromCharCode(65+n)+". "+x;
+    b.onclick=()=>answer(n);
+    $("options").appendChild(b);
+  });
+}
+function answer(n){
+  if(answered)return;
+  answered=true;
+  let q=qs[i],bs=[...document.querySelectorAll(".option")];
+  bs[q[2]].classList.add("correct");
+  if(n===q[2]){
+    score++;
+    $("feedback").textContent="🎉 正解！";
+  }else{
+    bs[n].classList.add("wrong");
+    $("feedback").textContent="❌ 不正解！ 正解は "+String.fromCharCode(65+q[2])+". "+q[1][q[2]];
+    currentMistakes.push({
+      q:q[0],selected:q[1][n],answer:q[1][q[2]],explain:q[3]
+    });
+    let all=JSON.parse(localStorage.getItem("mistakes")||"[]");
+    all.push({
+      q:q[0],selected:q[1][n],answer:q[1][q[2]],explain:q[3]
+    });
+    localStorage.setItem("mistakes",JSON.stringify(all));
+  }
+  $("score").textContent=score;
+  $("feedback").style.display="block";
+  $("next").disabled=false;
+}
+$("next").onclick=()=>{
+  i++;if(i>=qs.length)finish();else show();
+};
+function restartQuiz(){
+  if(currentSetId!==null){
+    playSet(currentSetId);
+  }else{
+    start();
+  }
+}
+function finish(){
+  const finishedSet=currentSetId!==null?getAllSets().find(x=>String(x.id)===String(currentSetId)):null;
+  missionSetFinished(finishedSet,score===qs.length);
+  $("playing").style.display="none";
+  $("result").style.display="block";
+  $("finalScore").textContent=score+" / "+qs.length+" 問";
+  let percent=qs.length?Math.round(score/qs.length*100):0;
+  $("rank").textContent=percent===100?"🏆 全問正解！":percent>=80?"✨ よくできました！":percent>=50?"📚 もう少し復習しよう！":"💪 まずは間違えた問題を復習しよう！";
+  $("progress").style.width="100%";
+  let box=$("resultMistakes");
+  if(!currentMistakes.length){
+    box.innerHTML='<div class="mistake"><h3>🎊 間違えた問題はありません！</h3><p>全問正解です。</p></div>';
+  }else{
+    box.innerHTML='<h3>❌ 間違えた問題</h3>'+
+      currentMistakes.map((x,n)=>`<div class="mistake">
+      <b>問題 ${n+1}</b><br>${escapeHtml(x.q)}<br>
+      あなたの答え：<span style="color:#ff9baa">${escapeHtml(x.selected)}</span><br>
+      正解：<span style="color:#55e6a5">${escapeHtml(x.answer)}</span><br>
+      解説：${escapeHtml(x.explain)}
+      </div>`).join("");
+  }
+}
+function goHome(){
+  clearInterval(survivalTimer); clearInterval(survivalCountdownTimer); survivalRunning=false;
+  clearInterval(timeAttackTimer); clearInterval(timeAttackCountdownTimer); timeAttackRunning=false;
+  document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+  $("titleScreen").style.display="flex";
+  $("titleScreen").classList.add("active");
+  window.scrollTo(0,0);
+  document.querySelector(".home-btn").style.display="none";
+}
+let loadingTimer=null;
+function withLoading(callback){
+  if(loadingTimer)clearTimeout(loadingTimer);
+  const overlay=$("loadingOverlay");
+  if(!overlay){callback();return}
+  overlay.classList.add("show");
+  overlay.setAttribute("aria-hidden","false");
+  const delay=300+Math.floor(Math.random()*701);
+  loadingTimer=setTimeout(()=>{
+    try{callback()}finally{
+      overlay.classList.remove("show");
+      overlay.setAttribute("aria-hidden","true");
+      loadingTimer=null;
+    }
+  },delay);
+}
+function loadScreen(id,after=null){withLoading(()=>{openScreen(id);if(after)after()})}
+function loadAction(callback){withLoading(callback)}
+function loadAndShowSets(type){withLoading(()=>showSets(type))}
+function loadAndShowMissions(cat){withLoading(()=>renderMissions(cat))}
+function openScreen(id){
+  $("titleScreen").style.display="none";
+  $("titleScreen").classList.remove("active");
+  document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+  $(id).classList.add("active");
+  document.querySelector(".home-btn").style.display="block";if(id==="create"){showCreated();if(problemCount===0)addProblemInput()}}
+function showSets(type="all"){
+  const all=getAllSets();
+  const sets=all.filter(s=>type==="all"||s.type===type).sort((a,b)=>{
+    // AI問題集は難しい順。自作・保存問題は元の順序を維持する。
+    if(a.type==="ai"&&b.type==="ai")return (b.difficulty||0)-(a.difficulty||0);
+    if(a.type==="ai")return -1;
+    if(b.type==="ai")return 1;
+    return 0;
+  });
+  const box=$("setList");
+  if(!box)return;
+  if(!sets.length){box.innerHTML='<div class="empty">まだ問題集がありません。</div>';return;}
+  box.innerHTML=sets.map(s=>`<div class="setcard">
+    <span class="tag">${s.type==="ai"?"🤖 AI作成":s.type==="saved"?"💾 保存した問題":"👤 自分が作成"}</span>
+    <h3>${escapeHtml(s.title)}</h3>
+    <p>${escapeHtml(s.desc||"")}</p>
+    <div>${s.problems.length}問　作成者：${escapeHtml(s.author||"")}${s.type==="ai"?`　難易度：${"★".repeat(s.difficulty||1)}`:""}</div>
+    <button type="button" class="playset" onclick="playSet('${s.id}')">▶ この問題集をプレイ</button>
+    ${s.type!=="ai"?`<button type="button" class="navbtn copy-code-btn" onclick="copySetCode('${s.id}')">📋 コードをコピー</button>`:""}
+    ${s.type!=="ai"?`<button type="button" class="delete-set" onclick="removeCustomSet(this.dataset.id)" data-id="${String(s.id)}">🗑 削除</button>`:""}
+  </div>`).join("");
+}
+function showCreated(){
+  const sets=getAllSets().filter(s=>s.type!=="ai");
+  const own=sets.filter(s=>s.type==="human");
+  const saved=sets.filter(s=>s.type==="saved");
+  const box=$("createdList");
+  if(!box)return;
+  const card=s=>`<div class="setcard"><b>${escapeHtml(s.title)}</b><br>${s.problems.length}問<div class="share-actions"><button type="button" class="navbtn" onclick="copySetCode('${s.id}')">📋 コードをコピー</button><button type="button" class="delete-set" onclick="removeCustomSet(this.dataset.id)" data-id="${String(s.id)}">🗑 削除</button></div></div>`;
+  box.innerHTML=`<h4>👤 自分が作った問題</h4>${own.length?own.map(card).join(""): '<div class="empty">まだありません。</div>'}<h4 style="margin-top:18px">💾 保存した問題</h4>${saved.length?saved.map(card).join(""): '<div class="empty">まだありません。</div>'}`;
+}
+function showMistakes(){let a;try{a=JSON.parse(localStorage.getItem("mistakes")||"[]");if(!Array.isArray(a))a=[]}catch(e){a=[]}let box=$("mistakeList");if(!a.length){box.innerHTML='<div class="empty">まだ間違えた問題はありません。</div>';return}box.innerHTML=a.map((x,n)=>`<div class="mistake"><b>問題 ${n+1}</b><br>${escapeHtml(x.q)}<br>あなたの答え：${escapeHtml(x.selected)}<br>正解：${escapeHtml(x.answer)}<br>解説：${escapeHtml(x.explain)}</div>`).join("")}
+function clearMistakes(){localStorage.removeItem("mistakes");showMistakes()}
+function solveEquation(s){
+  if(typeof s!=="string")return null;
+  s=s.replace(/[\s　]/g,"").replace(/＝/g,"=").replace(/＋/g,"+").replace(/−/g,"-").replace(/－/g,"-").replace(/[（]/g,"(").replace(/[）]/g,")").replace(/×/g,"*").replace(/÷/g,"/");
+  if(!s.includes("=")||s.split("=").length!==2)return null;
+  let [L,R]=s.split("=");
+  if(!L||!R)return null;
+
+  function add(u,v){return [u[0]+v[0],u[1]+v[1]];}
+  function sub(u,v){return [u[0]-v[0],u[1]-v[1]];}
+  function mul(u,v){
+    // 一次式同士の積は x² になるため、このゲームでは不可。
+    if(u[0]!==0&&v[0]!==0)return null;
+    return u[0]===0?[v[0]*u[1],v[1]*u[1]]:[u[0]*v[1],u[1]*v[1]];
+  }
+  function div(u,v){
+    if(v[0]!==0||v[1]===0)return null;
+    return [u[0]/v[1],u[1]/v[1]];
+  }
+  function parseExpr(str){
+    let pos=0;
+    function peek(){return str[pos]||"";}
+    function number(){
+      let st=pos,dots=0;
+      while(/[0-9.]/.test(peek())){if(peek()===".")dots++;pos++;}
+      if(st===pos||dots>1)return null;
+      return [0,Number(str.slice(st,pos))];
+    }
+    function factor(){
+      if(peek()==="+"){pos++;return factor();}
+      if(peek()==="-"){pos++;let v=factor();return v?[ -v[0],-v[1] ]:null;}
+      if(peek()==="("){pos++;let v=expr();if(peek()!==")")return null;pos++;return v;}
+      if(peek()==="x"){pos++;return [1,0];}
+      if(/[0-9.]/.test(peek()))return number();
+      return null;
+    }
+    function term(){
+      let v=factor();if(!v)return null;
+      while(true){
+        let op=peek();
+        if(op!=="*"&&op!=="/"){
+          // 2x や 2(x+1) の暗黙の掛け算
+          if(op==="x"||op==="("){op="*";}else break;
+        }else pos++;
+        let w=factor();if(!w)return null;
+        v=op==="*"?mul(v,w):div(v,w);if(!v)return null;
+      }
+      return v;
+    }
+    function expr(){
+      let v=term();if(!v)return null;
+      while(peek()==="+"||peek()==="-"){let op=peek();pos++;let w=term();if(!w)return null;v=op==="+"?add(v,w):sub(v,w);}
+      return v;
+    }
+    let v=expr();
+    return v&&pos===str.length?v:null;
+  }
+
+  let l=parseExpr(L),r=parseExpr(R);
+  if(!l||!r||l[0]===r[0])return null;
+  let x=(r[1]-l[1])/(l[0]-r[0]);
+  if(!Number.isFinite(x))return null;
+  return Number.isInteger(x)?x:Math.round(x*100)/100;
+}
+
+let survivalTime = 15;
+let survivalCorrectCount = 0;
+let survivalQuestionCount = 0;
+let survivalCurrent = null;
+let survivalRunning = false;
+let survivalTimer = null;
+let survivalCountdownTimer = null;
+
+let survivalLastQuestion = "";
+let survivalCurrentStreak = 0;
+let survivalMaxStreak = 0;
+
+// サバイバルの問題は、固定リストではなく毎回その場で生成する。
+function makeSurvivalQuestion(){
+  const level = getSurvivalDifficulty();
+  let q, ans, e;
+
+  do{
+    if(level === 0){
+      // x + a = b
+      const x = Math.floor(Math.random()*15) - 3;
+      const a = Math.floor(Math.random()*12) + 2;
+      const b = x + a;
+      q = `x ${a >= 0 ? "+" : "−"} ${Math.abs(a)} = ${b}`;
+      ans = x;
+      e = `${b} ${a >= 0 ? "−" : "+"} ${Math.abs(a)} = ${x}`;
+    }else if(level === 1){
+      // ax + b = c
+      const x = Math.floor(Math.random()*13) - 3;
+      const a = Math.floor(Math.random()*5) + 2;
+      const b = Math.floor(Math.random()*15) - 7;
+      const c = a*x + b;
+      q = `${a}x ${b >= 0 ? "+" : "−"} ${Math.abs(b)} = ${c}`;
+      ans = x;
+      e = `${c} ${b >= 0 ? "−" : "+"} ${Math.abs(b)} = ${a}x → x = ${x}`;
+    }else if(level === 2){
+      // ax + b = dx + e
+      const x = Math.floor(Math.random()*15) - 4;
+      const a = Math.floor(Math.random()*5) + 3;
+      const d = Math.floor(Math.random()*(a-1)) + 1;
+      const b = Math.floor(Math.random()*15) - 7;
+      const e2 = (a-d)*x + b;
+      q = `${a}x ${b >= 0 ? "+" : "−"} ${Math.abs(b)} = ${d}x ${e2 >= 0 ? "+" : "−"} ${Math.abs(e2)}`;
+      ans = x;
+      e = `${a}x − ${d}x = ${e2} − ${b} → ${a-d}x = ${e2-b} → x = ${x}`;
+    }else{
+      // 少し難しめ。ax + b = dx + e で係数・定数を大きくする。
+      const x = Math.floor(Math.random()*21) - 7;
+      const a = Math.floor(Math.random()*8) + 4;
+      const d = Math.floor(Math.random()*(a-2)) + 1;
+      const b = Math.floor(Math.random()*31) - 15;
+      const e2 = (a-d)*x + b;
+      q = `${a}x ${b >= 0 ? "+" : "−"} ${Math.abs(b)} = ${d}x ${e2 >= 0 ? "+" : "−"} ${Math.abs(e2)}`;
+      ans = x;
+      e = `${a}x − ${d}x = ${e2} − ${b} → ${a-d}x = ${e2-b} → x = ${x}`;
+    }
+  }while(q === survivalLastQuestion);
+
+  survivalLastQuestion = q;
+  return {q, ans, e};
+}
+
+function startSurvivalMode(){
+  clearInterval(survivalTimer);
+  clearInterval(survivalCountdownTimer);
+  survivalRunning = false;
+  survivalTime = 15;
+  survivalCorrectCount = 0;
+  survivalQuestionCount = 0;
+  survivalCurrentStreak = 0;
+  survivalMaxStreak = 0;
+  openScreen('survival');
+  updateSurvivalTime();
+  $("survivalCorrectCount").textContent = "正解：0問";
+  $("survivalCountdown").textContent = "";
+  $("survivalStart").style.display = "block";
+  $("survivalStart").disabled = false;
+  $("survivalQuestion").textContent = "スタートを押して挑戦！";
+  $("survivalInputArea").style.display = "none";
+  $("survivalResult").style.display = "none";
+}
+
+function startSurvivalGame(){
+  if(survivalRunning)return;
+  survivalRunning = false;
+  survivalTime = 15;
+  survivalCorrectCount = 0;
+  survivalQuestionCount = 0;
+  survivalCurrentStreak = 0;
+  survivalMaxStreak = 0;
+  updateSurvivalTime();
+  $("survivalCorrectCount").textContent = "正解：0問";
+  $("survivalStart").style.display = "none";
+  $("survivalInputArea").style.display = "none";
+  
+  $("survivalResult").style.display = "none";
+
+  let n = 3;
+  $("survivalCountdown").textContent = n;
+  clearInterval(survivalCountdownTimer);
+  survivalCountdownTimer = setInterval(() => {
+    n--;
+    if(n > 0){
+      $("survivalCountdown").textContent = n;
+    }else{
+      clearInterval(survivalCountdownTimer);
+      $("survivalCountdown").textContent = "GO!";
+      survivalRunning = true;
+      $("survivalInputArea").style.display = "flex";
+      nextSurvivalQuestion();
+      clearInterval(survivalTimer);
+      survivalTimer = setInterval(() => {
+        if(!survivalRunning)return;
+        survivalTime--;
+        if(survivalTime <= 0){
+          survivalTime = 0;
+          updateSurvivalTime();
+          endSurvivalMode();
+        }else{
+          updateSurvivalTime();
+        }
+      },1000);
+      setTimeout(() => {
+        if(survivalRunning)$("survivalCountdown").textContent = "";
+      },400);
+    }
+  },700);
+}
+
+function updateSurvivalTime(){
+  const el = $("survivalTime");
+  if(el)el.textContent = Math.max(0,survivalTime) + "秒";
+}
+
+function getSurvivalDifficulty(){
+  // 10問ごとに難易度アップ。最初の10問はレベル0、その後10問ごとに上がる。
+  if(survivalQuestionCount < 10)return 0;
+  if(survivalQuestionCount < 20)return 1;
+  if(survivalQuestionCount < 30)return 2;
+  return 3;
+}
+
+function nextSurvivalQuestion(){
+  survivalQuestionCount++;
+  survivalCurrent = makeSurvivalQuestion();
+  $("survivalQuestion").textContent = survivalCurrent.q + " のとき、xは？";
+  $("survivalInputArea").style.display = "flex";
+  $("survivalAnswerInput").value = "";
+  $("survivalAnswerInput").disabled = false;
+  $("survivalAnswerButton").disabled = false;
+  $("survivalAnswerInput").focus();
+  $("survivalResult").style.display = "none";
+}
+
+function keypadInput(ch){
+  const input = $("survivalAnswerInput");
+  if(input.disabled || !survivalRunning)return;
+  if(ch === "-" && input.value.length > 0)return;
+  if(ch === "-" && input.value.includes("-"))return;
+  input.value += ch;
+  input.focus();
+}
+function keypadBackspace(){
+  const input = $("survivalAnswerInput");
+  if(input.disabled || !survivalRunning)return;
+  input.value = input.value.slice(0,-1);
+  input.focus();
+}
+function keypadClear(){
+  const input = $("survivalAnswerInput");
+  if(input.disabled || !survivalRunning)return;
+  input.value = "";
+  input.focus();
+}
+
+function answerSurvival(){
+  if(!survivalRunning || !survivalCurrent)return;
+
+  const input = $("survivalAnswerInput");
+  const button = $("survivalAnswerButton");
+  const value = Number(input.value);
+  if(input.value.trim() === "" || !Number.isFinite(value))return;
+
+  if(value === survivalCurrent.ans){
+    input.disabled = true;
+    button.disabled = true;
+    survivalTime += 5;
+    survivalCorrectCount++;
+    survivalCurrentStreak++;
+    survivalMaxStreak = Math.max(survivalMaxStreak, survivalCurrentStreak);
+    updateSurvivalTime();
+    $("survivalCorrectCount").textContent = "正解："+survivalCorrectCount+"問";
+    $("survivalResult").style.display = "block";
+    $("survivalResult").textContent = "⭕ 正解！ +5秒";
+
+    setTimeout(() => {
+      if(survivalRunning)nextSurvivalQuestion();
+    },250);
+  }else{
+    survivalCurrentStreak = 0;
+    survivalTime -= 1;
+    updateSurvivalTime();
+    $("survivalResult").style.display = "block";
+    $("survivalResult").textContent = "❌ 不正解！ -1秒　正解するまでこの問題を続けよう！";
+    input.select();
+
+    if(survivalTime <= 0){
+      survivalTime = 0;
+      endSurvivalMode();
+    }
+  }
+}
+
+$("survivalAnswerInput").addEventListener("keydown", e => {
+  if(e.key === "Enter")answerSurvival();
+});
+
+function endSurvivalMode(){
+  if(!survivalRunning)return;
+  clearInterval(survivalTimer);
+  clearInterval(survivalCountdownTimer);
+  if(!survivalRunning && survivalTime > 0)return;
+
+  survivalRunning = false;
+  missionSurvivalEnd();
+  survivalTime = Math.max(0,survivalTime);
+  updateSurvivalTime();
+  addSurvivalRecord(survivalCorrectCount);
+
+  $("survivalQuestion").textContent = "🏁 タイムアップ！";
+  $("survivalCountdown").textContent = "";
+  $("survivalInputArea").style.display = "none";
+  $("survivalResult").style.display = "block";
+  $("survivalResult").innerHTML =
+    "<b>スコア："+survivalCorrectCount+"問</b><br>" +
+    "最高連続正解："+survivalMaxStreak+"問<br><br>" +
+    "<button class='mainbtn' onclick='startSurvivalGame()'>もう一度</button> " +
+    "<button class='navbtn' onclick='goHome()'>🏠 タイトルに戻る</button>";
+}
+let timeAttackTime=0,timeAttackCorrect=0,timeAttackLevel=0,timeAttackCurrent=null,timeAttackRunning=false,timeAttackTimer=null,timeAttackCountdownTimer=null,timeAttackLastQuestion="",timeAttackStart=0;
+
+function startTimeAttackMode(){
+  clearInterval(timeAttackTimer); clearInterval(timeAttackCountdownTimer); timeAttackRunning=false; timeAttackTime=0; timeAttackCorrect=0; timeAttackCurrent=null; timeAttackLastQuestion="";
+  openScreen("timeattack"); updateTimeAttackTime();
+  $("timeAttackSelect").style.display="block"; updateTimeAttackHellUI(); $("timeAttackCountdown").textContent=""; $("timeAttackQuestion").textContent=""; $("timeAttackInputArea").style.display="none"; $("timeAttackResult").style.display="none"; $("timeAttackCount").textContent="1問目 / 10問";
+}
+function makeTimeAttackQuestion(){
+  let q,ans;
+  do{
+    if(timeAttackLevel===0){
+      const x=Math.floor(Math.random()*16)-3,a=Math.floor(Math.random()*10)+2,b=x+a; q=`x ${a>=0?"+":"−"} ${Math.abs(a)} = ${b}`; ans=x;
+    }else if(timeAttackLevel===1){
+      const x=Math.floor(Math.random()*16)-4,a=Math.floor(Math.random()*5)+2,b=Math.floor(Math.random()*15)-7,c=a*x+b; q=`${a}x ${b>=0?"+":"−"} ${Math.abs(b)} = ${c}`; ans=x;
+    }else if(timeAttackLevel===2){
+      const x=Math.floor(Math.random()*19)-6,a=Math.floor(Math.random()*7)+3,d=Math.floor(Math.random()*(a-1))+1,b=Math.floor(Math.random()*21)-10,e=(a-d)*x+b; q=`${a}x ${b>=0?"+":"−"} ${Math.abs(b)} = ${d}x ${e>=0?"+":"−"} ${Math.abs(e)}`; ans=x;
+    }else{
+      // 地獄：＋・−を増やすのではなく、数字を少し大きくして暗算の計算量を上げる。
+      const x=Math.floor(Math.random()*25)-12;
+      const leftA=Math.floor(Math.random()*7)+3;
+      const rightA=Math.floor(Math.random()*7)+1;
+      if(leftA===rightA)continue;
+      const leftConst=Math.floor(Math.random()*61)-30;
+      const rightConst=(leftA-rightA)*x+leftConst;
+      if(Math.abs(rightConst)>60)continue;
+      const fmt=n=>`${n>=0?"+":"−"} ${Math.abs(n)}`;
+      q=`${leftA}x ${fmt(leftConst)} = ${rightA}x ${fmt(rightConst)}`;
+      ans=x;
+    }
+  }while(q===timeAttackLastQuestion);
+  timeAttackLastQuestion=q; return {q,ans};
+}
+function isTimeAttackHellUnlocked(){const s=getMissionState();return s.modeUnlocks&&s.modeUnlocks.taHell===true||s.taLevelClears[2]>=3;}
+function updateTimeAttackHellUI(){
+  const b=$("timeAttackHellButton"),st=$("timeAttackHellStatus");
+  const unlocked=isTimeAttackHellUnlocked();
+  if(b){b.classList.toggle("locked",!unlocked);b.innerHTML=unlocked?"🔥 地獄<br><small>少し大きな数字で暗算力に挑戦</small>":"🔒 地獄<br><small>難しいを3回クリアで解放</small>";}
+  if(st)st.textContent=unlocked?"🔥 地獄解放済み！ 少し大きな数字に挑戦！":"🔒 地獄は「難しい」を10回クリアすると解放";
+}
+function startTimeAttack(level){
+  if(level===3&&!isTimeAttackHellUnlocked()){alert("「難しい」を3回クリアすると地獄が解放されます。");return;}
+  timeAttackLevel=level; timeAttackTime=0; timeAttackCorrect=0; timeAttackRunning=false; updateTimeAttackTime(); $("timeAttackSelect").style.display="none"; $("timeAttackInputArea").style.display="none"; $("timeAttackResult").style.display="none"; $("timeAttackCount").textContent="1問目 / 10問";
+  let n=3; $("timeAttackCountdown").textContent=n; clearInterval(timeAttackTimer); clearInterval(timeAttackCountdownTimer);
+  const cd=setInterval(()=>{n--; if(n>0){$("timeAttackCountdown").textContent=n}else{clearInterval(cd); $("timeAttackCountdown").textContent="GO!"; timeAttackRunning=true; timeAttackStart=performance.now(); $("timeAttackInputArea").style.display="flex"; nextTimeAttackQuestion(); timeAttackTimer=setInterval(()=>{if(!timeAttackRunning)return; timeAttackTime=(performance.now()-timeAttackStart)/1000; updateTimeAttackTime()},50); setTimeout(()=>{if(timeAttackRunning){$("timeAttackCountdown").textContent=""; updateTimeAttackTime()}},400)}},700);
+  timeAttackCountdownTimer=cd;
+}
+function updateTimeAttackTime(){ $("timeAttackTime").textContent=timeAttackTime.toFixed(2)+"秒"; }
+function nextTimeAttackQuestion(){
+  if(timeAttackCorrect>=10){endTimeAttack(true);return;}
+  timeAttackCurrent=makeTimeAttackQuestion(); $("timeAttackQuestion").textContent=timeAttackCurrent.q+" のとき、xは？"; $("timeAttackAnswerInput").value=""; $("timeAttackAnswerInput").disabled=false; $("timeAttackAnswerInput").focus(); $("timeAttackResult").style.display="none"; $("timeAttackCount").textContent=(timeAttackCorrect+1)+"問目 / 10問";
+}
+function timeKeypadInput(ch){const i=$("timeAttackAnswerInput");if(i.disabled||!timeAttackRunning)return;if(ch==='-'&&i.value.length>0)return;if(ch==='-'&&i.value.includes('-'))return;i.value+=ch;i.focus()}
+function timeKeypadBackspace(){const i=$("timeAttackAnswerInput");if(i.disabled||!timeAttackRunning)return;i.value=i.value.slice(0,-1);i.focus()}
+function timeKeypadClear(){const i=$("timeAttackAnswerInput");if(i.disabled||!timeAttackRunning)return;i.value="";i.focus()}
+function answerTimeAttack(){
+  if(!timeAttackRunning||!timeAttackCurrent)return;
+  const i=$("timeAttackAnswerInput"),v=Number(i.value); if(i.value.trim()===""||!Number.isFinite(v))return;
+  if(v===timeAttackCurrent.ans){
+    timeAttackCorrect++; timeAttackTime=(performance.now()-timeAttackStart)/1000; updateTimeAttackTime();
+    $("timeAttackCount").textContent=timeAttackCorrect+"問 / 10問"; i.disabled=true;
+    if(timeAttackCorrect>=10){endTimeAttack(true);return;}
+    setTimeout(()=>{if(timeAttackRunning)nextTimeAttackQuestion()},80);
+  }else{
+    endTimeAttack(false);
+  }
+}
+$("timeAttackAnswerInput").addEventListener("keydown",e=>{if(e.key==="Enter")answerTimeAttack()});
+function endTimeAttack(cleared){
+  if(!timeAttackRunning)return;
+  missionTimeAttackPlayed();
+  if(cleared){ missionTimeAttackClear(timeAttackLevel,timeAttackTime); addTimeAttackRecord(timeAttackLevel,timeAttackTime); }
+  clearInterval(timeAttackTimer); timeAttackRunning=false; timeAttackTime=(performance.now()-timeAttackStart)/1000; updateTimeAttackTime(); $("timeAttackInputArea").style.display="none"; $("timeAttackCountdown").textContent="";
+  $("timeAttackQuestion").textContent=cleared?"🏆 10問クリア！":"💥 不正解！ タイムアタック終了";
+  $("timeAttackResult").style.display="block";
+  $("timeAttackResult").innerHTML=cleared?"<b>クリアタイム："+timeAttackTime.toFixed(2)+"秒</b><br><br><button class='mainbtn' onclick='startTimeAttackMode()'>もう一度</button>":"<b>"+timeAttackCorrect+"問正解で終了</b><br><br><button class='mainbtn' onclick='startTimeAttackMode()'>もう一度</button>";
+}
+
+
+// ===== 自分のランキング =====
+function getRankingData(){
+  try{
+    const d=JSON.parse(localStorage.getItem("rankingData")||"null");
+    if(!d||typeof d!=="object")return {survival:[],timeattack:[]};
+    const survival=Array.isArray(d.survival)?d.survival.map(r=>({score:Number(r?.score)||0,name:String(r?.name||"プレイヤー"),date:String(r?.date||"")})).filter(r=>Number.isFinite(r.score)):[];
+    const timeattack=Array.isArray(d.timeattack)?d.timeattack.map(r=>({level:Number(r?.level)||0,time:Number(r?.time)||0,name:String(r?.name||"プレイヤー"),date:String(r?.date||"")})).filter(r=>Number.isFinite(r.time)):[];
+    survival.sort((a,b)=>b.score-a.score);
+    timeattack.sort((a,b)=>a.time-b.time);
+    return {survival:survival.slice(0,10),timeattack:timeattack.slice(0,20)};
+  }catch(e){return {survival:[],timeattack:[]};}
+}
+function saveRankingData(d){try{localStorage.setItem("rankingData",JSON.stringify(d))}catch(e){console.warn("ランキングを保存できませんでした",e)}}
+function addSurvivalRecord(score){
+  const d=getRankingData();
+  d.survival.push({score:Number(score)||0,name:getProfile().name||"プレイヤー",date:new Date().toLocaleString("ja-JP")});
+  d.survival.sort((a,b)=>b.score-a.score);
+  d.survival=d.survival.slice(0,10);
+  saveRankingData(d);
+}
+function addTimeAttackRecord(level,time){
+  const d=getRankingData();
+  d.timeattack.push({level:Number(level)||0,time:Number(time)||0,name:getProfile().name||"プレイヤー",date:new Date().toLocaleString("ja-JP")});
+  d.timeattack.sort((a,b)=>a.time-b.time);
+  d.timeattack=d.timeattack.slice(0,20);
+  saveRankingData(d);
+}
+let pendingRankingDelete={type:null,index:null};
+function deleteRanking(type,index){
+  const d=getRankingData();
+  let r=null;
+  if(type==="survival") r=d.survival[index];
+  else if(type==="timeattack") r=d.timeattack[index];
+  if(!r)return;
+  pendingRankingDelete={type,index};
+  const detail=type==="survival"
+    ? `サバイバル　${r.score}問　${r.date}`
+    : `タイムアタック　${r.level===0?"簡単":r.level===1?"普通":r.level===2?"難しい":"地獄"}　${Number(r.time).toFixed(2)}秒　${r.date}`;
+  $("rankingDeleteText").textContent=`「${detail}」を削除しますか？`;
+  $("rankingDeleteModal").classList.add("show");
+  $("rankingDeleteModal").setAttribute("aria-hidden","false");
+}
+function cancelRankingDelete(){
+  pendingRankingDelete={type:null,index:null};
+  $("rankingDeleteModal").classList.remove("show");
+  $("rankingDeleteModal").setAttribute("aria-hidden","true");
+}
+function confirmRankingDelete(){
+  const {type,index}=pendingRankingDelete;
+  if(type===null||index===null){cancelRankingDelete();return;}
+  const d=getRankingData();
+  if(type==="survival" && d.survival[index]) d.survival.splice(index,1);
+  else if(type==="timeattack" && d.timeattack[index]) d.timeattack.splice(index,1);
+  else {cancelRankingDelete();return;}
+  saveRankingData(d);
+  cancelRankingDelete();
+  showMyRanking();
+}
+function showMyRanking(){
+  const d=getRankingData();
+  const sr=$("survivalRanking");
+  sr.innerHTML=d.survival.length?d.survival.map((r,i)=>`<div class="ranking-row"><span><b>${i+1}位</b>　${escapeHtml(r.name)}　${r.score}問　<small>${escapeHtml(r.date)}</small></span><button class="delete-ranking" onclick="deleteRanking('survival',${i})">削除</button></div>`).join(""):'<p>まだ記録がありません。</p>';
+  const rankings=[
+    [0,"timeAttackRankingEasy"],[1,"timeAttackRankingNormal"],[2,"timeAttackRankingHard"],[3,"timeAttackRankingHell"]
+  ];
+  rankings.forEach(([level,id])=>{
+    const el=$(id);
+    const rows=d.timeattack.map((r,index)=>({r,index})).filter(x=>x.r.level===level).slice(0,10);
+    el.innerHTML=rows.length?rows.map((x,i)=>`<div class="ranking-row"><span><b>${i+1}位</b>　${escapeHtml(x.r.name)}　${Number(x.r.time).toFixed(2)}秒　<small>${escapeHtml(x.r.date)}</small></span><button class="delete-ranking" onclick="deleteRanking('timeattack',${x.index})">削除</button></div>`).join(""):'<p>まだクリア記録がありません。</p>';
+  });
+}
+
+// ===== プロフィール・ミッション報酬 =====
+const PROFILE_MESSAGES=[
+  {id:'m0',text:'メッセージを選ぼう！',mission:null},
+  {id:'m1',text:'今日も頑張る！',mission:'ot4'},
+  {id:'m2',text:'計算は任せろ',mission:'ta1'},
+  {id:'m3',text:'もっと速く！',mission:'ta4'},
+  {id:'m4',text:'連続正解を狙う！',mission:'sv4'},
+  {id:'m5',text:'地獄でも負けない',mission:'ta6'},
+  {id:'m6',text:'全ミッション制覇！',mission:'ot5'}
+];
+const PROFILE_BACKGROUNDS=[
+  {id:'b0',name:'初期',css:'linear-gradient(135deg,#202849,#111837)',mission:null},
+  {id:'b1',name:'数学研究室',css:'linear-gradient(135deg,#173b4d,#111837)',mission:'ta1'},
+  {id:'b2',name:'夜の研究室',css:'linear-gradient(135deg,#25205a,#11132d)',mission:'ta4'},
+  {id:'b3',name:'宇宙',css:'radial-gradient(circle at 70% 25%,#5363b2 0 2px,transparent 3px),radial-gradient(circle at 25% 70%,#7183ff 0 2px,transparent 3px),linear-gradient(135deg,#10142d,#090b18)',mission:'sv4'},
+  {id:'b4',name:'異世界',css:'linear-gradient(135deg,#4b245f,#182e58,#102b2a)',mission:'ta6'},
+  {id:'b5',name:'最終研究所',css:'linear-gradient(135deg,#5b3b1b,#253b64,#111837)',mission:'ot5'}
+];
+
+function defaultProfile(){return{name:'プレイヤー',avatar:'🧙',messageId:'m0',backgroundId:'b0'}}
+function getProfile(){let d=defaultProfile();try{const x=JSON.parse(localStorage.getItem('profileData')||'null');if(x&&typeof x==='object')d={...d,...x}}catch(e){}return d}
+function saveProfile(p){localStorage.setItem('profileData',JSON.stringify(p))}
+function profileMissionUnlocked(missionId){if(!missionId)return true;return !!getMissionState().unlocked[missionId]}
+function renderProfile(){
+  updateMissions();
+  const p=getProfile();
+  const bg=PROFILE_BACKGROUNDS.find(x=>x.id===p.backgroundId)||PROFILE_BACKGROUNDS[0];
+  const msg=PROFILE_MESSAGES.find(x=>x.id===p.messageId)||PROFILE_MESSAGES[0];
+  $('profileNameView').textContent=p.name||'プレイヤー';
+  $('profileNameInput').value=p.name||'';
+  $('profileMessageView').textContent=msg.text;
+  $('profilePreview').style.setProperty('--profile-bg',bg.css);
+  $('profileMessageList').innerHTML=PROFILE_MESSAGES.map(x=>{
+    const ok=profileMissionUnlocked(x.mission);return `<button class="profile-item ${p.messageId===x.id?'selected':''} ${ok?'':'locked'}" ${ok?`onclick="selectProfileMessage('${x.id}')"`:''}>${ok?'💬':'🔒'} ${escapeHtml(x.text)}${x.mission?`<div class="profile-small">ミッション「${escapeHtml((MISSION_DEFS.find(m=>m.id===x.mission)||{}).title||'')}」で解放</div>`:''}</button>`
+  }).join('');
+  $('profileBackgroundList').innerHTML=PROFILE_BACKGROUNDS.map(x=>{
+    const ok=profileMissionUnlocked(x.mission);return `<button class="profile-item ${p.backgroundId===x.id?'selected':''} ${ok?'':'locked'}" ${ok?`onclick="selectProfileBackground('${x.id}')"`:''}><span style="display:block;height:55px;border-radius:8px;background:${x.css};margin-bottom:8px"></span>${ok?'🖼️':'🔒'} ${escapeHtml(x.name)}${x.mission?`<div class="profile-small">ミッション「${escapeHtml((MISSION_DEFS.find(m=>m.id===x.mission)||{}).title||'')}」で解放</div>`:''}</button>`
+  }).join('');
+}
+function saveProfileName(){const p=getProfile();p.name=(($('profileNameInput').value||'').trim()||'プレイヤー').slice(0,16);saveProfile(p);renderProfile()}
+function selectProfileMessage(id){const p=getProfile();if(!PROFILE_MESSAGES.some(x=>x.id===id&&profileMissionUnlocked(x.mission)))return;p.messageId=id;saveProfile(p);renderProfile()}
+function selectProfileBackground(id){const p=getProfile();if(!PROFILE_BACKGROUNDS.some(x=>x.id===id&&profileMissionUnlocked(x.mission)))return;p.backgroundId=id;saveProfile(p);renderProfile()}
+
+// ===== ミッションシステム =====
+const MISSION_DEFS=[
+  {id:'ta1',cat:'timeattack',title:'初挑戦',desc:'タイムアタックに初めて挑戦する',test:s=>s.taPlays>=1,prog:s=>`${Math.min(s.taPlays,1)} / 1回`},
+  {id:'ta2',cat:'timeattack',title:'タイムアタッカー',desc:'タイムアタックを合計10回クリアする',test:s=>s.taClears>=10,prog:s=>`${Math.min(s.taClears,10)} / 10回`},
+  {id:'ta3',cat:'timeattack',title:'タイムアタックの達人',desc:'タイムアタックを合計20回クリアする',test:s=>s.taClears>=20,prog:s=>`${Math.min(s.taClears,20)} / 20回`},
+  {id:'ta4',cat:'timeattack',title:'簡単マスター',desc:'タイムアタック「簡単」を10回クリアする',test:s=>s.taLevelClears[0]>=10,prog:s=>`${Math.min(s.taLevelClears[0],10)} / 10回`},
+  {id:'ta5',cat:'timeattack',title:'普通マスター',desc:'タイムアタック「普通」を10回クリアする',test:s=>s.taLevelClears[1]>=10,prog:s=>`${Math.min(s.taLevelClears[1],10)} / 10回`},
+  {id:'ta6',cat:'timeattack',title:'難しいマスター',desc:'タイムアタック「難しい」を10回クリアする',test:s=>s.taLevelClears[2]>=10,prog:s=>`${Math.min(s.taLevelClears[2],10)} / 10回`},
+  {id:'ta7',cat:'timeattack',title:'スピードスター・簡単',desc:'「簡単」を2分以内にクリアする',test:s=>s.taFast[0]===true,prog:s=>s.taFast[0]?'達成':'未達成'},
+  {id:'ta8',cat:'timeattack',title:'スピードスター・普通',desc:'「普通」を2分30秒以内にクリアする',test:s=>s.taFast[1]===true,prog:s=>s.taFast[1]?'達成':'未達成'},
+  {id:'ta9',cat:'timeattack',title:'スピードスター・難しい',desc:'「難しい」を3分以内にクリアする',test:s=>s.taFast[2]===true,prog:s=>s.taFast[2]?'達成':'未達成'},
+  {id:'ta10',cat:'timeattack',title:'タイムアタック完全制覇',desc:'タイムアタック系のミッションをすべてクリアする',test:s=>MISSION_DEFS.filter(m=>m.cat==='timeattack'&&m.id!=='ta10').every(m=>m.test(s)),prog:s=>`${MISSION_DEFS.filter(m=>m.cat==='timeattack'&&m.id!=='ta10').filter(m=>m.test(s)).length} / 9`},
+  {id:'sv1',cat:'survival',title:'初挑戦',desc:'サバイバルに初めて挑戦する',test:s=>s.svPlays>=1,prog:s=>`${Math.min(s.svPlays,1)} / 1回`},
+  {id:'sv2',cat:'survival',title:'10回プレイ',desc:'サバイバルを10回プレイする',test:s=>s.svPlays>=10,prog:s=>`${Math.min(s.svPlays,10)} / 10回`},
+  {id:'sv3',cat:'survival',title:'20回プレイ',desc:'サバイバルを20回プレイする',test:s=>s.svPlays>=20,prog:s=>`${Math.min(s.svPlays,20)} / 20回`},
+  {id:'sv4',cat:'survival',title:'10問正解',desc:'1回のプレイで10問以上正解する',test:s=>s.svMaxCorrect>=10,prog:s=>`${Math.min(s.svMaxCorrect,10)} / 10問`},
+  {id:'sv5',cat:'survival',title:'30問正解',desc:'1回のプレイで30問以上正解する',test:s=>s.svMaxCorrect>=30,prog:s=>`${Math.min(s.svMaxCorrect,30)} / 30問`},
+  {id:'sv6',cat:'survival',title:'50問正解',desc:'1回のプレイで50問以上正解する',test:s=>s.svMaxCorrect>=50,prog:s=>`${Math.min(s.svMaxCorrect,50)} / 50問`},
+  {id:'sv7',cat:'survival',title:'5問連続正解',desc:'1回のプレイで5問以上連続で正解する',test:s=>s.svMaxStreak>=5,prog:s=>`${Math.min(s.svMaxStreak,5)} / 5問`},
+  {id:'sv8',cat:'survival',title:'10問連続正解',desc:'1回のプレイで10問以上連続で正解する',test:s=>s.svMaxStreak>=10,prog:s=>`${Math.min(s.svMaxStreak,10)} / 10問`},
+  {id:'sv9',cat:'survival',title:'20問連続正解',desc:'1回のプレイで20問以上連続で正解する',test:s=>s.svMaxStreak>=20,prog:s=>`${Math.min(s.svMaxStreak,20)} / 20問`},
+  {id:'sv10',cat:'survival',title:'サバイバル完全制覇',desc:'サバイバル系のミッションをすべてクリアする',test:s=>MISSION_DEFS.filter(m=>m.cat==='survival'&&m.id!=='sv10').every(m=>m.test(s)),prog:s=>`${MISSION_DEFS.filter(m=>m.cat==='survival'&&m.id!=='sv10').filter(m=>m.test(s)).length} / 9`},
+  {id:'ot4',cat:'other',title:'初プレイ',desc:'初めて「方程式クエスト」を開く',test:s=>s.firstOpen===true,prog:s=>s.firstOpen?'達成':'未達成'},
+  {id:'ot3',cat:'other',title:'初ミッション',desc:'ミッションを初めてクリアする',test:s=>s.firstMission===true,prog:s=>s.firstMission?'達成':'未達成'},
+  {id:'ot1',cat:'other',title:'AI問題集ビギナー',desc:'AIが作った問題集を1つ全問正解する',test:s=>Object.keys(s.aiPerfectIds).length>=1,prog:s=>`${Math.min(Object.keys(s.aiPerfectIds).length,1)} / 1個`},
+  {id:'ot2',cat:'other',title:'AI問題集マスター',desc:'AIが作った問題集をすべて全問正解する',test:s=>{const ai=getAllSets().filter(x=>x.type==='ai');return ai.length>0&&ai.every(x=>s.aiPerfectIds[String(x.id)])},prog:s=>{const ai=getAllSets().filter(x=>x.type==='ai');const n=ai.filter(x=>s.aiPerfectIds[String(x.id)]).length;return `${n} / ${ai.length}個`}},
+  {id:'ot5',cat:'other',title:'ミッションコンプリート',desc:'すべてのミッションをクリアする',test:s=>MISSION_DEFS.filter(m=>m.id!=='ot5').every(m=>m.test(s)),prog:s=>`${MISSION_DEFS.filter(m=>m.id!=='ot5').filter(m=>m.test(s)).length} / 24`}
+];
+function defaultMissionState(){return {taPlays:0,taClears:0,taLevelClears:[0,0,0],taFast:[false,false,false],svPlays:0,svMaxCorrect:0,svMaxStreak:0,aiClearedIds:{},aiPerfectIds:{},firstMission:false,firstOpen:false,unlocked:{},modeUnlocks:{},clearDates:{},clearOrder:[]}}
+function getMissionState(){let d=defaultMissionState();try{let s=JSON.parse(localStorage.getItem('missionState')||'null');if(s&&typeof s==='object')d={...d,...s,taLevelClears:Array.isArray(s.taLevelClears)?s.taLevelClears:[0,0,0],taFast:Array.isArray(s.taFast)?s.taFast:[false,false,false],aiClearedIds:s.aiClearedIds||{},aiPerfectIds:s.aiPerfectIds||{},unlocked:s.unlocked||{},modeUnlocks:s.modeUnlocks||{},clearDates:s.clearDates||{},clearOrder:Array.isArray(s.clearOrder)?s.clearOrder:[]}}catch(e){}return d}
+function saveMissionState(s){localStorage.setItem('missionState',JSON.stringify(s))}
+function missionCount(s){return MISSION_DEFS.filter(m=>m.test(s)).length}
+let missionNoticeTimer=null;
+function showMissionClearNotice(names){
+  const el=$("actionMessage"),txt=$("actionMessageText");
+  if(!el||!txt)return;
+  txt.innerHTML='<b>🏆 ミッションクリア！</b><br>'+names.map(n=>'✅ '+escapeHtml(n)).join('<br>');
+  el.classList.add('show');
+  if(missionNoticeTimer)clearTimeout(missionNoticeTimer);
+  missionNoticeTimer=setTimeout(()=>{hideActionMessage();missionNoticeTimer=null},3500);
+}
+function updateMissions(){
+  const s=getMissionState();
+  let changed=false;
+  const newly=[];
+  const today=new Date().toLocaleDateString('ja-JP');
+  for(const m of MISSION_DEFS){
+    if(m.id==='ot3')continue;
+    if(m.test(s)&&!s.unlocked[m.id]){
+      s.unlocked[m.id]=true;
+      s.clearDates[m.id]=today;
+      if(!s.clearOrder.includes(m.id))s.clearOrder.push(m.id);
+      changed=true;
+      newly.push(m.title);
+      if(!['ot3','ot4','ot5'].includes(m.id))s.firstMission=true;
+    }
+  }
+  if(MISSION_DEFS.find(m=>m.id==='ta6')?.test(s)&&!s.modeUnlocks.taHell){
+    s.modeUnlocks.taHell=true;
+    changed=true;
+    newly.push('🔥 タイムアタック「地獄」解放！');
+  }
+  if(s.firstMission&&!s.unlocked.ot3){
+    s.unlocked.ot3=true;
+    s.clearDates.ot3=today;
+    if(!s.clearOrder.includes('ot3'))s.clearOrder.push('ot3');
+    changed=true;
+    newly.push('初ミッション');
+  }
+  saveMissionState(s);
+  if(newly.length)showMissionClearNotice(newly);
+  return s;
+}
+function renderMissions(cat='all'){
+  const box=$('missionList');if(!box)return;const s=updateMissions();
+  const base=MISSION_DEFS.filter(m=>cat==='all'||m.cat===cat);
+  const order=new Map((s.clearOrder||[]).map((id,i)=>[id,i]));
+  const list=[...base].sort((a,b)=>{
+    const ad=!!s.unlocked[a.id],bd=!!s.unlocked[b.id];
+    if(ad!==bd)return bd-ad;
+    if(ad&&bd)return (order.get(a.id)??999999)-(order.get(b.id)??999999);
+    return MISSION_DEFS.indexOf(a)-MISSION_DEFS.indexOf(b);
+  });
+  const done=missionCount(s);
+  box.innerHTML=`<div class="mission-summary">🏆 ${done} / ${MISSION_DEFS.length} ミッション達成</div>`+list.map(m=>{
+    const ok=m.test(s);
+    const date=ok?(s.clearDates[m.id]||'記録前'):'未クリア';
+    return `<div class="mission-card ${ok?'done':''}"><span class="mission-badge">${ok?'✅':'🔒'}</span><div class="mission-title">${escapeHtml(m.title)}</div><div class="mission-desc">${escapeHtml(m.desc)}</div><div class="mission-progress">${escapeHtml(m.prog(s))}</div>${ok?`<div class="mission-date">📅 クリア日：${escapeHtml(date)}</div>`:''}</div>`;
+  }).join('');
+}
+function missionTimeAttackPlayed(){const s=getMissionState();s.taPlays++;saveMissionState(s);updateMissions()}
+function missionTimeAttackClear(level,time){const s=getMissionState();s.taClears++;if(level>=0&&level<=2){s.taLevelClears[level]++;if(time<=[120,150,180][level])s.taFast[level]=true;}saveMissionState(s);updateMissions()}
+function missionSurvivalEnd(){const s=getMissionState();s.svPlays++;s.svMaxCorrect=Math.max(s.svMaxCorrect,survivalCorrectCount);s.svMaxStreak=Math.max(s.svMaxStreak,survivalMaxStreak);saveMissionState(s);updateMissions()}
+function missionSetFinished(set,perfect){const s=getMissionState();if(set&&set.type==='ai'){const id=String(set.id);s.aiClearedIds[id]=true;if(perfect)s.aiPerfectIds[id]=true;saveMissionState(s);updateMissions()}}
+
+
+
+// 初回起動ミッション
+(function initFirstOpenMission(){const s=getMissionState();if(!s.firstOpen){s.firstOpen=true;saveMissionState(s)}updateMissions()})();
+// 初回のみタイトル画面からプロフィール設定へ案内
+
+
+
+
+</script>
+
+<script>
+const guidePatterns={
+  plus:{
+    eq:["x + 3 = 8","x + 3 − 3 = 8 − 3","x = 8 − 3","x = 5 🎉"],
+    bubble:["＋3がじゃまだ！","左右から3を引くよ","＋3が消えた！","8 − 3 = 5"]
+  },
+  minus:{
+    eq:["x − 3 = 5","x − 3 + 3 = 5 + 3","x = 5 + 3","x = 8 🎉"],
+    bubble:["−3がじゃまだ！","左右に3を足すよ","−3が消えた！","5 + 3 = 8"]
+  },
+  multiply:{
+    eq:["3x = 12","3x ÷ 3 = 12 ÷ 3","x = 12 ÷ 3","x = 4 🎉"],
+    bubble:["xの前の3がじゃまだ！","左右を3で割るよ","3が消えた！","12 ÷ 3 = 4"]
+  },
+  divide:{
+    eq:["x ÷ 3 = 4","x ÷ 3 × 3 = 4 × 3","x = 4 × 3","x = 12 🎉"],
+    bubble:["÷3がじゃまだ！","左右に3をかけるよ","÷3が消えた！","4 × 3 = 12"]
+  },
+  two:{
+    eq:["2x + 3 = 11","2x + 3 − 3 = 11 − 3","2x = 8","x = 4 🎉"],
+    bubble:["まず＋3を消そう！","左右から3を引くよ","次に2を消そう！","左右を2で割ると…"]
+  }
+};
+
+let guidePaused=false;
+function setGuidePaused(paused){
+  guidePaused=paused;
+  const scene=document.getElementById("guideScene");
+  const btn=document.getElementById("guidePause");
+  if(scene) scene.querySelectorAll(".guide-eq,.guide-bubble").forEach(el=>el.style.animationPlayState=paused?"paused":"running");
+  if(btn) btn.textContent=paused?"▶ 再生":"⏸ 一時停止";
+}
+function playGuidePattern(key){
+  const scene=document.getElementById("guideScene");
+  if(!scene||!guidePatterns[key])return;
+  const data=guidePatterns[key];
+  guidePaused=false;
+
+  document.querySelectorAll(".guide-pattern").forEach(b=>{
+    b.classList.toggle("active",b.dataset.pattern===key);
+  });
+
+  scene.className="guide-scene pattern-"+key;
+  scene.innerHTML=`
+    <div class="guide-bubble p1">${data.bubble[0]}</div>
+    <div class="guide-bubble p2">${data.bubble[1]}</div>
+    <div class="guide-bubble p3">${data.bubble[2]}</div>
+    <div class="guide-bubble p4">${data.bubble[3]}</div>
+    <div class="guide-eq e1">${data.eq[0]}</div>
+    <div class="guide-eq e2">${data.eq[1]}</div>
+    <div class="guide-eq e3">${data.eq[2]}</div>
+    <div class="guide-eq e4">${data.eq[3]}</div>
+    <div class="guide-caption">自動でゆっくり再生します</div>
+  `;
+
+  // クラス再設定後にアニメーションを確実に最初から再生
+  void scene.offsetWidth;
+
+  // どのタイミングでもパターンを切り替えられる。
+  setGuidePaused(false);
+}
+
+const guidePause=document.getElementById("guidePause");
+if(guidePause) guidePause.addEventListener("click",()=>setGuidePaused(!guidePaused));
+
+document.querySelectorAll(".guide-pattern").forEach(btn=>{
+  btn.addEventListener("click",()=>playGuidePattern(btn.dataset.pattern));
+});
+
+// 解説画面を開いたとき、選択中のパターンを必ず表示
+playGuidePattern("plus");
+</script>
+</body>
+</html>
